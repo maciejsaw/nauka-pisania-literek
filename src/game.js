@@ -77,6 +77,10 @@ const SP_BODY = '<circle cx="16" cy="17" r="6.5" fill="currentColor" stroke="non
 const smallA = (k) => `<rect x="3" y="3" width="26" height="26" rx="6" stroke-dasharray="3 3.5" stroke-width="2"/><g transform="translate(16 16.5) scale(${k})"><circle cx="-2.5" cy="1" r="6.5" vector-effect="non-scaling-stroke"/><path d="M4 -5.5V7.5" vector-effect="non-scaling-stroke"/></g>`;
 const flag = (n) => '<path d="M10 29V3.5"/><path d="M10 5h16l-3.5 6 3.5 6H10"/><path d="M10 5h5v6h-5zM20 5h5.2l-2.7 6H20zM15 11h5v6h-5z" fill="currentColor" stroke="none"/>' + ['M2 9h5', 'M1 14h6', 'M2 19h5'].slice(0, n).map((d) => `<path d="${d}"/>`).join('');
 const ICONS = {
+  unlock: '<rect x="7" y="14" width="18" height="14" rx="3"/><path d="M11 14V9a5 5 0 0 1 9.7-1.7"/><circle cx="16" cy="21" r="1"/>',
+  privacy: '<path d="M16 3 27 7v8c0 7-5 11-11 14C10 26 5 22 5 15V7z"/><path d="m11 16 3.5 3.5L21 13"/>',
+  info: '<circle cx="16" cy="16" r="12"/><path d="M16 14v9"/><circle cx="16" cy="9" r="1" fill="currentColor" stroke="none"/>',
+  close: '<path d="m9 9 14 14M23 9 9 23"/>',
   lock: '<rect x="7" y="14" width="18" height="14" rx="3"/><path d="M11 14V9a5 5 0 0 1 10 0v5"/><circle cx="16" cy="21" r="1"/>',
   settings: '<path d="m13 3-1 4-3 2-4-1-2 5 3 3v3l-3 3 3 5 4-1 3 2 1 3h5l1-4 3-2 4 1 2-5-3-3v-3l3-3-3-5-4 1-3-2-1-3z"/><circle cx="16" cy="17" r="4"/>',
   home: '<path d="M4 16 16 5l12 11"/><path d="M8 13.5V27h6v-7h4v7h6V13.5"/>',
@@ -1299,6 +1303,10 @@ $('hifive').addEventListener('click', () => {
 /* ---------- przyciski ---------- */
 function toMenu() { G = null; cancelAnimationFrame(raf); gameEl.hidden = true; resultEl.hidden = true; rewardEl.hidden = true; menuEl.hidden = false; renderMenu(); }
 $('settingsBtn').innerHTML = icon('settings');
+$('closeSettingsBtn').innerHTML = icon('close');
+for (const [id, symbol] of [['fullVersionBtn', 'unlock'], ['parentInfoBtn', 'info'], ['privacyBtn', 'privacy']]) {
+  $(id).insertAdjacentHTML('afterbegin', icon(symbol));
+}
 $('settingsBtn').addEventListener('click', () => $('settingsDialog').showModal());
 $('closeSettingsBtn').addEventListener('click', () => $('settingsDialog').close());
 $('parentInfoBtn').addEventListener('click', () => $('parentInfoDialog').showModal());

@@ -18,7 +18,7 @@ Efekt: oba konta pozwalają tworzyć i monetyzować aplikację.
 
 Projekt ma wspólny identyfikator `com.maciejsawicki.pajaczek`, nazwę sklepową **Pajączek: nauka literek** i nazwę pod ikoną **Pajączek**. Nie zmieniaj identyfikatora po pierwszym wysłaniu paczki. Jeśli jest zajęty, zmień go konsekwentnie przed pierwszą wysyłką w projektach Android/iOS, capacitor.config.ts i release-config.json.
 
-Wzory liter w dostarczonej grze wskazują font „Elementarz Dwa”. Potrzebne jest potwierdzenie uprawnień do użycia tych wzorów w sprzedawanej aplikacji lub zastąpienie ich własnymi. Zobacz THIRD-PARTY-NOTICES.md. Po potwierdzeniu ustaw `contentRightsConfirmed: true` w release-config.json. Nie zaznaczaj tej opcji tylko po to, żeby przejść kontrolę.
+Wzory liter i cyfr są niezależnie opracowanymi ścieżkami. Ich pochodzenie zostało potwierdzone; `contentRightsConfirmed` w release-config.json jest już ustawione na `true`. Zestawienie materiałów i licencji używanych zależności znajduje się w THIRD-PARTY-NOTICES.md.
 
 W `release-config.json` wpisz publiczny adres pomocy w `supportEmail`. Strony pomocy i prywatności aktualizują się automatycznie podczas builda. Dane kontaktowe recenzenta (telefon itp.) zapiszesz oddzielnie w sekrecie.
 

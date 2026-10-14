@@ -113,7 +113,7 @@ restoreBtn.addEventListener('click', () => askParent(async () => {
   finally { setBusy(false); }
 }));
 $('fullVersionBtn').addEventListener('click', () => void openPaywall());
-$('privacyBtn').addEventListener('click', () => askParent(async () => { $('privacyDialog').removeAttribute('hidden'); $<HTMLDialogElement>('privacyDialog').showModal(); }));
+$('privacyBtn').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').showModal());
 $('privacyClose').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').close());
 access.addEventListener('change', () => { if (access.full && paywall.open) success(); });
 const purchaseReady = initPurchases().catch(() => { /* Free letters always remain usable. */ });

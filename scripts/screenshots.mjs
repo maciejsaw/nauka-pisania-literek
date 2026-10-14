@@ -28,9 +28,14 @@ try {
     await page.screenshot({ path: shot(2) });
     await page.getByRole('button', { name: 'Wróć do wszystkich literek' }).click();
     await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
+    await mkdir('build/previews', { recursive: true });
+    await page.screenshot({ path: `build/previews/settings-${device.name}.png` });
     await page.getByRole('button', { name: 'Informacje dla rodzica', exact: true }).click();
     await page.screenshot({ path: shot(3) });
     // QA image of the web demo paywall, deliberately excluded from store uploads.
+    await page.keyboard.press('Escape');
+    await page.getByRole('button', { name: 'Prywatność', exact: true }).click();
+    await page.screenshot({ path: `build/previews/privacy-${device.name}.png` });
     await page.keyboard.press('Escape'); await page.keyboard.press('Escape');
     await page.getByRole('button', { name: 'wielka literka D, pełna wersja', exact: true }).click();
     await mkdir('build/previews', { recursive: true });

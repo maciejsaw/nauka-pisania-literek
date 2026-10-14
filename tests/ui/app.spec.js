@@ -15,7 +15,7 @@ test('five free pairs, locks, friendly paywall, no fake web payment', async ({ p
   await expect(page.locator('#soundBtn')).toHaveCount(0);
   expect(errors).toEqual([]);
 });
-test('settings, parent guide, parent gate and focus restoration', async ({ page }) => {
+test('settings, parent guide, direct privacy access and focus restoration', async ({ page }) => {
   await page.goto('/');
   await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
   await page.getByRole('button', { name: 'Informacje dla rodzica', exact: true }).click();
@@ -23,13 +23,14 @@ test('settings, parent guide, parent gate and focus restoration', async ({ page 
   await page.keyboard.press('Escape');
   await expect(page.locator('#parentInfoBtn')).toBeFocused();
   await page.getByRole('button', { name: 'Prywatność', exact: true }).click();
-  await page.locator('#parentAnswer').fill('0');
-  await page.getByRole('button', { name: 'Dalej', exact: true }).click();
-  await expect(page.locator('#parentError')).toContainText('Spróbuj ponownie');
-  const numbers = (await page.locator('#parentQuestion').textContent()).match(/\d+/g).map(Number);
-  await page.locator('#parentAnswer').fill(String(numbers[0] * numbers[1]));
-  await page.getByRole('button', { name: 'Dalej', exact: true }).click();
   await expect(page.locator('#privacyDialog')).toBeVisible();
+  await expect(page.locator('#parentGateDialog')).toBeHidden();
+  await page.getByRole('button', { name: 'Zamknij prywatność', exact: true }).click();
+  await expect(page.locator('#privacyBtn')).toBeFocused();
+  await page.getByRole('button', { name: 'Prywatność', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#privacyDialog')).toBeHidden();
+  await expect(page.locator('#privacyBtn')).toBeFocused();
 });
 test('small-screen layout and offline game', async ({ page, context }) => {
   await page.setViewportSize({ width: 320, height: 568 });
