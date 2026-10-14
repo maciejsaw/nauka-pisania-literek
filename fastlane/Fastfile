@@ -36,7 +36,7 @@ platform :ios do
         precheck_include_in_app_purchases: false,
         copyright: CONFIG.fetch('copyright'),
         app_review_information: { first_name: contact['firstName'], last_name: contact['lastName'], phone_number: contact['phone'], email_address: contact['email'], demo_account_required: false },
-        submission_information: { export_compliance_uses_encryption: false, add_id_info_uses_idfa: false })
+        submission_information: { add_id_info_uses_idfa: false })
     end
   end
 end
