@@ -1,6 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures.js';
 test('five free pairs, locks, friendly paywall, no fake web payment', async ({ page }) => {
-  const errors = []; page.on('pageerror', e => errors.push(e.message));
   await page.goto('/');
   await expect(page.locator('.tile:not(.locked)')).toHaveCount(10);
   await expect(page.locator('.tile.locked')).toHaveCount(64);
@@ -13,7 +12,6 @@ test('five free pairs, locks, friendly paywall, no fake web payment', async ({ p
   await page.getByRole('button', { name: 'mała literka a', exact: true }).click();
   await expect(page.locator('#game')).toBeVisible();
   await expect(page.locator('#soundBtn')).toHaveCount(0);
-  expect(errors).toEqual([]);
 });
 test('settings, parent guide, direct privacy access and focus restoration', async ({ page }) => {
   await page.goto('/');

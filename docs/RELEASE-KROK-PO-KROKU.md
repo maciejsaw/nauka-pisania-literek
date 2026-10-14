@@ -1,5 +1,7 @@
 # Od gotowego kodu do pierwszego wydania
 
+Wolisz przejść wydanie wspólnie? [Druga instrukcja: co robisz Ty i kiedy przekazujesz sterowanie asystentowi](https://github.com/maciejsaw/nauka-pisania-literek/blob/main/docs/WYDANIE-RAZEM-Z-ASYSTENTEM.md).
+
 Ta instrukcja jest dla właściciela aplikacji. Kod, ikony, opisy, zrzuty i automatyzacja są w repo. Nie potrzebujesz Maca z procesorem M: iOS kompiluje GitHub na swoim Macu. Twój Intel wystarczy do przygotowania kluczy i wysyłania zmian.
 
 **Nie wklejaj kluczy, plików JSON, haseł ani certyfikatów do rozmowy, issue lub commita.** Repo jest publiczne. Poniżej podano dokładne nazwy bezpiecznych pól GitHub.

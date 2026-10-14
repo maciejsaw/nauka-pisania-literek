@@ -57,4 +57,4 @@ function buildLetter(strokes) {
   return { strokes: built, width: maxX - minX, minY, maxY };
 }
 
-export { buildLetter };
+export { buildLetter, resample };

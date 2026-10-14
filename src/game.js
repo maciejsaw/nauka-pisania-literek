@@ -1,4 +1,4 @@
-import { buildLetter } from './geometry.js';
+import { buildLetter, resample } from './geometry.js';
 import { LETTERS } from './letters.js';
 import { saveProgress, loadProgress } from './storage.js';
 

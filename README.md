@@ -4,6 +4,8 @@ Polska aplikacja do ćwiczenia pisania, przygotowana jako strona WWW oraz projek
 
 **Zacznij tutaj: [wydanie do sklepów krok po kroku](docs/RELEASE-KROK-PO-KROKU.md).**
 
+**Wydajemy razem: [co robisz Ty, a kiedy przekazujesz sterowanie asystentowi](docs/WYDANIE-RAZEM-Z-ASYSTENTEM.md).**
+
 - Darmowe: A/a, Ą/ą, B/b, C/c i Ć/ć.
 - Pozostałe litery i cyfry: jednorazowy produkt `full_version` (RevenueCat + natywne sklepy).
 - WWW: demo bez zakupu; mobilne zakupy działają po skonfigurowaniu kluczy i produktów.
@@ -19,6 +21,8 @@ Ikony: `npm run assets`. Zrzuty sklepowe: `npm run build && npm run screenshots`
 ## Automatyzacja
 
 `Checks and website`: testy JS/przeglądarki, kompilacja debug Android i symulatora iOS, a także próba podpisania Android Release tymczasowym kluczem i archiwizacja iOS Release dla urządzeń (bez podpisu Apple). Testowy klucz Android znika po kontroli; tych paczek nie wysyłamy do sklepów. Testy skryptów publikacji sprawdzają wybór kanału beta/produkcja bez kontaktu ze sklepami. GitHub Pages aktualizuje się po testach web.
+
+Smoke testy przeglądarkowe faktycznie rysują litery ruchem wskaźnika: ukończenie z pająkiem, automatyczny wynik bez pająka, przycisk Gotowe, ponowna próba, Dalej, zapis postępów po odświeżeniu, wszystkie ruchy Ą i ć oraz piątka i odznaka po ostatnim wyścigu. Każdy scenariusz wykrywa nieobsłużone błędy JavaScript. Testy działają na gotowym buildzie przed publikacją strony i przed wydaniem do sklepów. Późniejsze poziomy mają przygotowany zapis postępu; samo pisanie i ocena nie są zastępowane atrapami. To kontrola gry w Chromium, nie test systemowego zakupu ani rysika na prawdziwym telefonie.
 
 `Release readiness`: ręczny raport ustawień z numerami kroków instrukcji. Wybierz `bootstrap` przed pierwszymi paczkami, `beta` przed wysyłką testową lub `production` przed produkcją. Wykrywa brakujące i pomylone klucze, sprawdza format plików i dane recenzenta, nie wypisuje ich zawartości. Niczego nie publikuje. Czerwony wynik oznacza pozycje do uzupełnienia; pełny raport jest w podsumowaniu przebiegu i artefakcie.
 
