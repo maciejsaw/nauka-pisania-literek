@@ -44,6 +44,8 @@ jobs:
         with: { ruby-version: '3.3', bundler-cache: true }
       - run: bundle lock --add-platform arm64-darwin x86_64-darwin ruby
       - run: bundle exec fastlane lanes
+      - run: bundle exec ruby tests/fastlane_test.rb
+      - run: python3 -m unittest discover -s tests -p "test_*.py"
       - uses: actions/upload-artifact@v4
         with: { name: ruby-lockfile, path: Gemfile.lock }
   android:
@@ -57,10 +59,26 @@ jobs:
       - uses: android-actions/setup-android@v3
         with: { packages: "platform-tools platforms;android-36 build-tools;36.0.0" }
       - run: npm ci && npm run sync
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true }
       - run: ./gradlew assembleDebug
         working-directory: android
       - uses: actions/upload-artifact@v4
         with: { name: android-debug, path: android/app/build/outputs/apk/debug/*.apk }
+      - name: Create temporary QA signing key (never used for store releases)
+        run: bash scripts/qa-android-key.sh
+      - run: bash scripts/check-android-signing.sh
+      - name: Exercise the actual Android release packaging lane
+        env:
+          APP_VERSION: '1.0.0'
+          BUILD_NUMBER: '1000001'
+        run: bundle exec fastlane android package
+      - name: Verify the bundle signature
+        run: |
+          jarsigner -verify -keystore "$ANDROID_KEYSTORE_PATH" -storepass:env ANDROID_KEYSTORE_PASSWORD -strict build/android/Pajaczek.aab
+      - if: always()
+        run: rm -f "$RUNNER_TEMP/qa-only-upload.jks"
+
   ios:
     runs-on: macos-26
     env:
@@ -73,6 +91,9 @@ jobs:
       - run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/ios-simulator CODE_SIGNING_ALLOWED=NO build
       - uses: actions/upload-artifact@v4
         with: { name: ios-simulator, path: build/ios-simulator/Build/Products/Debug-iphonesimulator/App.app }
+      - name: Archive Release for real iOS devices (without Apple credentials)
+        run: xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release -destination 'generic/platform=iOS' -archivePath build/ios-release/Pajaczek.xcarchive CODE_SIGNING_ALLOWED=NO archive
+
   pages:
     if: github.ref == 'refs/heads/main'
     needs: web

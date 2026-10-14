@@ -4,6 +4,8 @@ Ta instrukcja jest dla właściciela aplikacji. Kod, ikony, opisy, zrzuty i auto
 
 **Nie wklejaj kluczy, plików JSON, haseł ani certyfikatów do rozmowy, issue lub commita.** Repo jest publiczne. Poniżej podano dokładne nazwy bezpiecznych pól GitHub.
 
+**Raport postępów:** [Actions → Release readiness](https://github.com/maciejsaw/nauka-pisania-literek/actions/workflows/readiness.yml) → Run workflow → branch `main`. Wybierz `bootstrap` przed pierwszymi paczkami, `beta` przed testową wysyłką albo `production` przed wydaniem. Raport pokazuje wszystkie braki naraz i numer właściwego kroku poniżej. Czerwony wynik na początku jest oczekiwany: oznacza nieuzupełnione ustawienia. Po każdej części konfiguracji możesz uruchomić go ponownie. Nie łączy się ze sklepami i niczego nie publikuje.
+
 ## 1. Sprawdź swoje istniejące konta
 
 - [Apple Developer](https://developer.apple.com/account/) i [App Store Connect](https://appstoreconnect.apple.com/): członkostwo musi być aktywne. W Business/Agreements uzupełnij umowę dla płatnych aplikacji/zakupów, rachunek bankowy i dane podatkowe.
@@ -91,7 +93,7 @@ Te dane są dla Apple App Review, nie do publicznego repo.
 
 ## 7. Zbuduj paczki do pierwszej konfiguracji
 
-Repo → Actions → **Release to stores** → Run workflow → branch main → `release_tag: v1.0.0-beta.1`.
+Najpierw uruchom **Release readiness** z etapem `bootstrap`. Po zielonym raporcie: repo → Actions → **Release to stores** → Run workflow → branch main → `release_tag: v1.0.0-beta.1`.
 
 Uruchomienie ręczne **tylko buduje podpisane paczki**, bez wysyłania ich do sklepów. Nie wymaga jeszcze flag gotowości produkcyjnej. Po sukcesie pobierz artefakty `signed-android` (Pajaczek.aab) i `signed-ios` (Pajaczek.ipa).
 
@@ -111,7 +113,7 @@ Na Apple pierwszą paczkę może już wysłać beta tag z kolejnego kroku; nie p
 
 ## 9. Pierwsza beta i test zakupów
 
-Po szkicu pierwszej paczki Android użyj **nowego** numeru beta:
+Po uruchomieniu pierwszego wydania testowego Android sprawdź **Release readiness → beta**, a następnie użyj **nowego** numeru beta:
 
 ```bash
 git tag v1.0.0-beta.2
@@ -156,7 +158,7 @@ Po faktycznym zakończeniu ustaw `privacyDeclarationsReviewed: true` i `storeLis
 
 ## 11. Pierwsze wydanie produkcyjne
 
-Upewnij się, że najnowszy przebieg **Checks and website** jest zielony, opisy i zrzuty są aktualne, a wszystkie flagi w release-config.json są prawdziwe. Zapisz konfigurację na main.
+Upewnij się, że najnowszy przebieg **Checks and website** jest zielony, opisy i zrzuty są aktualne, a wszystkie flagi w release-config.json są prawdziwe. Zapisz konfigurację na main. Uruchom **Release readiness → production** i uzupełnij wszystkie pozycje raportu przed utworzeniem taga.
 
 ```bash
 npm run doctor -- --production
@@ -171,6 +173,19 @@ Tag uruchamia: kontrole → podpisane buildy obu platform → wysyłkę → zgł
 Zmieniasz kod i release notes, pushujesz na main, sprawdzasz zielone testy, opcjonalnie wydajesz `v1.0.1-beta.1`, a następnie `v1.0.1`. Nie przesuwaj istniejących tagów i nie używaj ponownie numerów wysłanych do sklepu. Numery buildów są wyliczane z taga; produkcja ma numer wyższy niż beta tej samej wersji. Obsługiwane są beta.1–beta.98; iOS używa formatu z kropkami zgodnego z ograniczeniami Apple, Android liczby całkowitej.
 
 Jeśli jedna wysyłka nie powiedzie się, użyj **Re-run failed jobs**, aby nie wysyłać ponownie paczki do sklepu, który już ją przyjął. Jeśli trzeba zmienić samą paczkę, nadaj nowy tag. Artefakty podpisanych buildów są przechowywane 14 dni.
+
+## Gdy kontrola zgłosi problem
+
+| Komunikat | Co poprawić |
+|---|---|
+| Brak lub niepoprawna Variable/Secret w raporcie | Wpisz wartość w GitHub w sekcji wskazanej przez raport. `Variables` i `Secrets` są osobnymi zakładkami. Nie zmieniaj ich nazw. |
+| Niewłaściwy klucz RevenueCat | iOS wymaga publicznego klucza `appl_`, Android `goog_`. Klucze `sk_` i `test_` nie służą do wydania tej aplikacji. |
+| Profil innej aplikacji, zespołu lub niewłaściwy certyfikat | Pobierz ponownie profil **App Store Connect** dla właściwego Bundle ID i certyfikatu. Uaktualnij `IOS_PROFILE_BASE64`; sprawdź `APPLE_TEAM_ID` (krok 5). |
+| Certyfikat/profil wygasł lub wygaśnie w ciągu 30 dni | Odnów podpis Apple i jego profil. Uaktualnij odpowiednie sekrety. Raport ważności pojawia się podczas budowania podpisanej paczki. |
+| Nie można odczytać klucza Android | Sprawdź zgodność pliku, aliasu i obu haseł (krok 5). Przy późniejszych wydaniach nie generuj pochopnie nowego klucza wysyłki. |
+| Ustawienia poprawne, ale sklep odmawia wysyłki | Sprawdź uprawnienia API, umowy i pierwsze ręczne wydanie Google (kroki 1, 6, 7). Raport formatu kluczy nie potwierdza uprawnień na koncie. |
+
+Automatyczne próby Release w **Checks and website** nie zużywają numeru wersji w sklepach. Android używa jednorazowego klucza testowego; iOS sprawdza archiwum dla prawdziwych urządzeń bez podpisu. Właściwe podpisanie i zakup sprawdzisz dopiero z własnymi kontami.
 
 ## Koszty i utrzymanie
 

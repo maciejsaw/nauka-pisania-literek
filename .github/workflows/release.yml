@@ -37,10 +37,30 @@ jobs:
       - run: npm ci
       - id: version
         run: npm run release:version
-      - name: Check store configuration
+      - name: Check all store settings before building
         env:
+          VITE_REVENUECAT_IOS_KEY: ${{ vars.VITE_REVENUECAT_IOS_KEY }}
+          VITE_REVENUECAT_ANDROID_KEY: ${{ vars.VITE_REVENUECAT_ANDROID_KEY }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          ASC_KEY_ID: ${{ vars.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ vars.ASC_ISSUER_ID }}
+          IOS_P12_BASE64: ${{ secrets.IOS_P12_BASE64 }}
+          IOS_PROFILE_BASE64: ${{ secrets.IOS_PROFILE_BASE64 }}
+          IOS_CERT_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           REVIEW_CONTACT_JSON: ${{ secrets.REVIEW_CONTACT_JSON }}
-        run: npm run doctor -- --ci
+          PUBLISH: ${{ github.event_name == 'push' }}
+        run: |
+          if [ "$PUBLISH" = true ]; then
+            npm run doctor -- --publish
+          else
+            npm run doctor -- --ci
+          fi
       - run: npm run typecheck && npm test && npm run check:metadata && npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:ui
@@ -75,6 +95,7 @@ jobs:
           p.write_bytes(base64.b64decode(value)); p.chmod(0o600)
           with open(os.environ['GITHUB_ENV'],'a') as f: f.write('ANDROID_KEYSTORE_PATH='+str(p)+'\n')
           PY
+      - run: bash scripts/check-android-signing.sh
       - run: npm ci && npm run sync
       - run: bundle exec fastlane android package
       - uses: actions/upload-artifact@v4
@@ -111,6 +132,7 @@ jobs:
             print('::add-mask::'+password)
             env.write('KEYCHAIN_PASSWORD='+password+'\n')
           PY
+      - run: python3 scripts/check-ios-signing.py
       - run: npm ci && npm run release:version && npm run sync
       - run: bundle exec fastlane ios package
       - uses: actions/upload-artifact@v4

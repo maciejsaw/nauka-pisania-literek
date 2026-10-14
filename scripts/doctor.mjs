@@ -1,24 +1,25 @@
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, appendFile, writeFile } from 'node:fs/promises';
+import { releaseReadiness, readinessMarkdown } from './release-readiness.mjs';
 const config = JSON.parse(await readFile('release-config.json', 'utf8'));
 const production = process.env.RELEASE_CHANNEL === 'production' || process.argv.includes('--production');
-const errors = [];
-const check = (ok, message) => { if (!ok) errors.push(message); };
-if (process.argv.includes('--ci')) {
-  for (const key of ['VITE_REVENUECAT_IOS_KEY','VITE_REVENUECAT_ANDROID_KEY']) {
-    check(Boolean(process.env[key]), `Brak zmiennej ${key}`);
-    check(!process.env[key]?.startsWith('test_') && !process.env[key]?.startsWith('sk_'), `${key}: wymagany publiczny klucz platformy, nie testowy ani sekretny`);
-  }
-}
+const stage = process.argv.includes('--publish') ? 'publish' : process.argv.includes('--ci') ? 'build' : 'local';
+const checks = releaseReadiness({ config, env: process.env, stage, production });
 if (production) {
-  for (const key of ['contentRightsConfirmed','privacyDeclarationsReviewed','storeListingsCompleted','sandboxPurchasesVerified','screenshotsReviewed']) check(config[key] === true, `Potwierdź ${key} w release-config.json po wykonaniu zadania z docs/RELEASE-KROK-PO-KROKU.md`);
-  check(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.supportEmail), 'Uzupełnij supportEmail');
-  if (process.argv.includes('--ci')) {
-    let contact = {}; try { contact = JSON.parse(process.env.REVIEW_CONTACT_JSON || '{}'); } catch {}
-    for (const field of ['firstName','lastName','email','phone']) check(Boolean(contact[field]), `Uzupełnij sekret REVIEW_CONTACT_JSON: ${field}`);
-  }
   for (const file of ['store/ios/screenshots/pl/1-iphone.png','store/ios/screenshots/pl/1-ipad.png','store/android/metadata/pl-PL/images/phoneScreenshots/1.png']) {
-    try { await access(file); } catch { errors.push(`Brak zrzutu ${file}`); }
+    let exists = true; try { await access(file); } catch { exists = false; }
+    checks.push({ id: file, ok: exists, label: `Zrzut ${file}`, step: 10 });
   }
 }
-if (errors.length) { console.error(errors.map(x => `• ${x}`).join('\n')); process.exitCode = 1; }
-else console.log(production ? 'Konfiguracja produkcyjna kompletna.' : 'Projekt gotowy do budowania. Przed produkcją uruchom npm run doctor -- --production.');
+const report = readinessMarkdown(checks, { stage, production });
+if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, report);
+const reportIndex = process.argv.indexOf('--report');
+if (reportIndex >= 0) {
+  if (!process.argv[reportIndex + 1]) throw new Error('Podaj ścieżkę po --report');
+  await writeFile(process.argv[reportIndex + 1], report);
+}
+const errors = checks.filter(check => !check.ok);
+if (errors.length) {
+  console.error(errors.map(check => `• ${check.label} — instrukcja, krok ${check.step}`).join('\n'));
+  console.error(`\nDo uzupełnienia: ${errors.length}. docs/RELEASE-KROK-PO-KROKU.md`);
+  process.exitCode = 1;
+} else console.log(stage === 'local' && !production ? 'Konfiguracja kont: Actions → Release readiness. Lokalna kontrola przed produkcją: npm run doctor -- --production.' : 'Kontrole wybranego etapu przeszły. Uprawnienia kont i zakupy wymagają próby w sklepach.');

@@ -22,3 +22,6 @@ ios/**/xcuserdata/
 *.csr
 secrets/
 fastlane/report.xml
+
+__pycache__/
+release-readiness.md

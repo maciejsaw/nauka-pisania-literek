@@ -8,6 +8,12 @@ def apple_api
   app_store_connect_api_key(key_id: ENV.fetch('ASC_KEY_ID'), issuer_id: ENV.fetch('ASC_ISSUER_ID'), key_content: ENV.fetch('ASC_KEY_P8_BASE64'), is_key_content_base64: true, duration: 1200)
 end
 
+def release_channel
+  channel = ENV.fetch('RELEASE_CHANNEL')
+  raise 'RELEASE_CHANNEL musi mieć wartość beta albo production.' unless ['beta', 'production'].include?(channel)
+  channel
+end
+
 platform :ios do
   desc 'Sign and archive the iOS app. No store submission.'
   lane :package do
@@ -23,9 +29,10 @@ platform :ios do
 
   desc 'Upload the already-built archive and optionally submit for review.'
   lane :publish do
+    channel = release_channel
     api = apple_api
     ipa = File.join(ROOT, 'build/ios/Pajaczek.ipa')
-    if ENV.fetch('RELEASE_CHANNEL') == 'beta'
+    if channel == 'beta'
       upload_to_testflight(api_key: api, ipa: ipa, app_identifier: BUNDLE_ID, skip_waiting_for_build_processing: true, distribute_external: false)
     else
       contact = JSON.parse(ENV.fetch('REVIEW_CONTACT_JSON'))
@@ -50,11 +57,12 @@ platform :android do
   end
   desc 'Upload an already-built bundle to the selected Play track.'
   lane :publish do
+    channel = release_channel
     upload_to_play_store(package_name: BUNDLE_ID, json_key: ENV.fetch('GOOGLE_PLAY_JSON_PATH'),
       aab: File.join(ROOT, 'build/android/Pajaczek.aab'),
-      track: ENV.fetch('RELEASE_CHANNEL') == 'beta' ? 'internal' : 'production', release_status: 'completed',
+      track: channel == 'beta' ? 'internal' : 'production', release_status: 'completed',
       metadata_path: File.join(ROOT, 'store/android/metadata'),
-      skip_upload_metadata: ENV['RELEASE_CHANNEL'] == 'beta', skip_upload_images: ENV['RELEASE_CHANNEL'] == 'beta', skip_upload_screenshots: ENV['RELEASE_CHANNEL'] == 'beta',
+      skip_upload_metadata: channel == 'beta', skip_upload_images: channel == 'beta', skip_upload_screenshots: channel == 'beta',
       changes_not_sent_for_review: false)
   end
 end
