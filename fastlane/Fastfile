@@ -30,7 +30,7 @@ platform :ios do
     else
       contact = JSON.parse(ENV.fetch('REVIEW_CONTACT_JSON'))
       upload_to_app_store(api_key: api, ipa: ipa, app_identifier: BUNDLE_ID,
-        app_version: ENV.fetch('APP_VERSION'), build_number: ENV.fetch('BUILD_NUMBER'),
+        app_version: ENV.fetch('APP_VERSION'), build_number: ENV.fetch('IOS_BUILD_NUMBER'),
         metadata_path: File.join(ROOT, 'store/ios/metadata'), screenshots_path: File.join(ROOT, 'store/ios/screenshots'),
         force: true, submit_for_review: true, automatic_release: true,
         precheck_include_in_app_purchases: false,

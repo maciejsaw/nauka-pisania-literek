@@ -17,7 +17,8 @@ const splash = await sharp({ create: { width: 2732, height: 2732, channels: 3, b
 for (const suffix of ['', '-1', '-2']) await writeFile(`ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732${suffix}.png`, splash);
 const feature = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="500"><rect width="1024" height="500" fill="#f9fbfd"/><path d="M0 100H1024M0 400H1024" stroke="#b8c7da" stroke-width="3"/><path d="M0 250H1024" stroke="#df776c" stroke-width="3"/><text x="430" y="205" font-family="sans-serif" font-size="65" font-weight="bold" fill="#1d3f8f">Pajączek</text><text x="430" y="280" font-family="sans-serif" font-size="42" fill="#1d3f8f">Nauka literek</text><text x="430" y="340" font-family="sans-serif" font-size="24" fill="#5c6880">Małe kroki. Wielka radość pisania.</text></svg>`;
 await writeFile('assets/branding/feature.svg', feature);
-await sharp(Buffer.from(feature)).composite([{ input: await sharp(svg).resize(360, 360).png().toBuffer(), left: 35, top: 65 }]).flatten({ background: '#f9fbfd' }).png().toFile('store/android/metadata/pl-PL/images/featureGraphic.png');
+const featurePng = await sharp(Buffer.from(feature)).composite([{ input: await sharp(svg).resize(360, 360).png().toBuffer(), left: 35, top: 65 }]).png().toBuffer();
+await sharp(featurePng).removeAlpha().png().toFile('store/android/metadata/pl-PL/images/featureGraphic.png');
 console.log('Ikony i grafiki sklepowe wygenerowane.');
 
 // Replace every generated Android splash density, including pre-Android-12 fallback.

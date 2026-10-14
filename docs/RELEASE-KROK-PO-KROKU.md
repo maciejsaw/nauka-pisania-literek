@@ -168,7 +168,7 @@ Tag uruchamia: kontrole → podpisane buildy obu platform → wysyłkę → zgł
 
 ## 12. Kolejne wydania
 
-Zmieniasz kod i release notes, pushujesz na main, sprawdzasz zielone testy, opcjonalnie wydajesz `v1.0.1-beta.1`, a następnie `v1.0.1`. Nie przesuwaj istniejących tagów i nie używaj ponownie numerów wysłanych do sklepu. Numery buildów są wyliczane z taga; produkcja ma numer wyższy niż beta tej samej wersji.
+Zmieniasz kod i release notes, pushujesz na main, sprawdzasz zielone testy, opcjonalnie wydajesz `v1.0.1-beta.1`, a następnie `v1.0.1`. Nie przesuwaj istniejących tagów i nie używaj ponownie numerów wysłanych do sklepu. Numery buildów są wyliczane z taga; produkcja ma numer wyższy niż beta tej samej wersji. Obsługiwane są beta.1–beta.98; iOS używa formatu z kropkami zgodnego z ograniczeniami Apple, Android liczby całkowitej.
 
 Jeśli jedna wysyłka nie powiedzie się, użyj **Re-run failed jobs**, aby nie wysyłać ponownie paczki do sklepu, który już ją przyjął. Jeśli trzeba zmienić samą paczkę, nadaj nowy tag. Artefakty podpisanych buildów są przechowywane 14 dni.
 
