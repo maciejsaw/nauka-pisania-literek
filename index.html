@@ -73,6 +73,12 @@ button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .settings-actions { display: grid; gap: 16px; margin-top: 24px; padding-bottom: 4px; }
 .settings-actions .btn { text-align: left; min-height: 48px; }
 .settings-dialog .foot { margin: 20px 0 0; font-size: 16px; }
+#parentInfoDialog { width: min(620px, calc(100% - 32px)); }
+.parent-guide { line-height: 1.65; }
+.parent-guide .parent-intro { font-size: 17px; color: var(--ink); margin-top: 20px; }
+.parent-guide section { margin-top: 22px; }
+.parent-guide h3 { font-family: var(--display); font-size: 19px; color: var(--ink); margin: 0 0 6px; }
+.parent-guide p { margin: 0 0 10px; }
 body:has(dialog[open]) { overflow: hidden; }
 
 /* ---------- GRA ---------- */
@@ -200,12 +206,20 @@ button.lv:not(:disabled):active { transform: scale(.88); }
   <div class="settings-actions">
     <button class="btn" id="soundMenuBtn" type="button" aria-pressed="false"></button>
     <button class="btn" id="penMenuBtn" type="button" aria-pressed="false"></button>
-    <button class="btn" id="parentInfoBtn" type="button" aria-haspopup="dialog">Informacje dla rodzica</button>
+    <button class="btn" id="parentInfoBtn" type="button" aria-haspopup="dialog"><svg class="ic" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="16" cy="16" r="12"/><path d="M16 14v9"/><circle cx="16" cy="9" r="1" fill="currentColor"/></svg>Informacje dla rodzica</button>
   </div>
 </dialog>
 <dialog id="parentInfoDialog" class="settings-dialog" aria-labelledby="parentInfoTitle">
   <div class="dialog-heading"><h2 id="parentInfoTitle">Informacje dla rodzica</h2><button class="iconbtn" id="closeParentInfoBtn" type="button" aria-label="Zamknij informacje dla rodzica" autofocus>×</button></div>
-  <p class="foot"><b>Dla rodzica:</b> kształty liter pochodzą z czcionki szkolnej „Elementarz Dwa” (proste pismo), a kolejność i kierunek ruchów — z plansz „kierunek pisania”. Małe litery piszemy bez odrywania ręki (poza kropkami, kreskami, ogonkami, poprzeczkami i literą k). Każda literka ma 11 zadań: z pająkiem, bez pająka, z szybszym pokazem, z samym mignięciem kształtu, bez wzoru, trzy razy coraz mniejsza, a na koniec trzy coraz szybsze wyścigi z pająkiem. Za wygranie ostatniego wyścigu pająk przybija piątkę, a dziecko dostaje odznakę. Po każdym zadaniu są tylko dwa przyciski: dalej (obrazek następnego zadania) albo powrót do menu. Gra zapamiętuje, na którym zadaniu dziecko skończyło. <b>Cyferki 0–9</b> mają taką samą ścieżkę 11 zadań jak literki. Ich kształty pochodzą z tego samego fontu „Elementarz Dwa” (wysokie jak wielkie litery), a kolejność i kierunek ruchów (np. czwórka, piątka i siódemka z dwóch ruchów) ustawiłem według pisma szkolnego — jeśli w waszej szkole którąś cyfrę pisze się inaczej, dajcie znać, poprawimy.</p>
+  <div class="parent-guide">
+    <p class="parent-intro">Tu dziecko ćwiczy pisanie liter i cyfr razem z Pajączkiem. Wystarczy wybrać znak i spróbować — spokojnie, we własnym tempie.</p>
+    <section><h3>Od czego zacząć?</h3><p>Wybierzcie literkę lub cyferkę na stronie głównej. Najpierw obejrzyjcie pokaz, a potem spróbujcie narysować znak. Przycisk z okiem pozwala obejrzeć pokaz ponownie.</p></section>
+    <section><h3>Małe kroki, coraz więcej samodzielności</h3><p>Każdy znak ma 11 ćwiczeń. Na początku pomaga Pajączek i widoczny wzór. Później podpowiedzi stopniowo znikają, a dziecko pisze coraz mniejsze znaki.</p><p>Na końcu czekają trzy wyścigi z Pajączkiem. Po wygraniu ostatniego dziecko zdobywa odznakę i przybija mu piątkę!</p></section>
+    <section><h3>Możecie zrobić przerwę</h3><p>Postęp zapisuje się automatycznie w tej przeglądarce. Możecie wrócić do menu i kontynuować innym razem na tym samym urządzeniu.</p></section>
+    <section><h3>Palcem czy rysikiem?</h3><p>Można pisać palcem lub rysikiem. W ustawieniach opcja „Tylko rysik” pomaga uniknąć przypadkowych kresek od dłoni. Tam też włączycie lub wyłączycie dźwięk.</p></section>
+    <section><h3>Jak wspierać dziecko?</h3><p>Dajcie sobie czas na próby. Chwalcie starania i róbcie przerwy, gdy pojawi się zmęczenie. Kilka spokojnych ćwiczeń wystarczy — nie trzeba zdobyć odznaki za jednym razem.</p></section>
+    <section><h3>O wzorach liter i cyfr</h3><p>Kształty pochodzą ze szkolnej czcionki „Elementarz Dwa”. Małe litery zwykle piszemy jednym ruchem; kropki, kreski, ogonki i niektóre elementy dodajemy osobno.</p><p>W szkole dziecka sposób pisania niektórych znaków może być nieco inny. Warto porównać wzór z tym, który pokazuje nauczyciel.</p></section>
+  </div>
 </dialog>
 
 <section id="game" hidden aria-label="Gra">
