@@ -6,6 +6,8 @@ import '@fontsource/atkinson-hyperlegible/latin-400.css';
 import '@fontsource/atkinson-hyperlegible/latin-ext-400.css';
 import '@fontsource/atkinson-hyperlegible/latin-700.css';
 import '@fontsource/atkinson-hyperlegible/latin-ext-700.css';
+import { Capacitor } from '@capacitor/core';
+import { App } from '@capacitor/app';
 import './styles.css';
 import './paywall.css';
 import { initStorage } from './storage.js';
@@ -117,3 +119,13 @@ access.addEventListener('change', () => { if (access.full && paywall.open) succe
 const purchaseReady = initPurchases().catch(() => { /* Free letters always remain usable. */ });
 await initStorage();
 initGame(access, (ch: string) => void openPaywall(ch));
+
+if (Capacitor.getPlatform() === 'android') {
+  void App.addListener('backButton', () => {
+    if (busy) return;
+    const dialogs = [...document.querySelectorAll<HTMLDialogElement>('dialog[open]')];
+    if (dialogs.length) { dialogs.at(-1)?.close(); return; }
+    if (!$('game').hidden) { $('backBtn').click(); return; }
+    void App.exitApp();
+  });
+}

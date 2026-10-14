@@ -18,7 +18,8 @@
     "sync": "npm run build && cap sync",
     "doctor": "node scripts/doctor.mjs",
     "release:version": "node scripts/version.mjs",
-    "prebuild": "node scripts/legal.mjs"
+    "prebuild": "node scripts/legal.mjs",
+    "check:metadata": "node scripts/check-metadata.mjs"
   },
   "dependencies": {
     "@capacitor/android": "8.5.3",

@@ -95,7 +95,7 @@ Repo → Actions → **Release to stores** → Run workflow → branch main → 
 
 Uruchomienie ręczne **tylko buduje podpisane paczki**, bez wysyłania ich do sklepów. Nie wymaga jeszcze flag gotowości produkcyjnej. Po sukcesie pobierz artefakty `signed-android` (Pajaczek.aab) i `signed-ios` (Pajaczek.ipa).
 
-W Play Console utwórz pierwszy szkic wydania w Internal testing i wgraj AAB. Uzupełnij Play App Signing i wymagane podstawowe pola. Ten pierwszy krok uruchamia możliwość późniejszych aktualizacji przez API. Nie wysyłaj tej samej paczki/tego samego numeru drugi raz.
+W Play Console utwórz pierwsze wydanie w Internal testing i wgraj AAB. Uzupełnij Play App Signing i wymagane podstawowe pola, następnie **uruchom pierwsze wydanie testowe**. Nie zostawiaj aplikacji wyłącznie jako szkicu: Play API może wtedy odrzucić automatyczne wydanie ze statusem completed. Jeśli konsola wymaga dodatkowych deklaracji, wykonaj już teraz odpowiednie punkty kroku 10. Ten pierwszy krok uruchamia możliwość późniejszych aktualizacji przez API. Nie wysyłaj tej samej paczki/tego samego numeru drugi raz.
 
 Na Apple pierwszą paczkę może już wysłać beta tag z kolejnego kroku; nie potrzebujesz aplikacji Transporter na swoim Macu.
 

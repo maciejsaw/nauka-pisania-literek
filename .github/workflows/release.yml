@@ -40,7 +40,7 @@ jobs:
         env:
           REVIEW_CONTACT_JSON: ${{ secrets.REVIEW_CONTACT_JSON }}
         run: npm run doctor -- --ci
-      - run: npm run typecheck && npm test && npm run build
+      - run: npm run typecheck && npm test && npm run check:metadata && npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:ui
   android:
