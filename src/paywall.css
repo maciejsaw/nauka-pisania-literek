@@ -1,0 +1,15 @@
+.tile-lock { position: absolute; right: 5px; top: 27px; z-index: 1; width: 24px; height: 24px; padding: 5px; border-radius: 50%; background: var(--paper); color: var(--ink); box-shadow: 0 2px 6px #1d3f8f20; }
+.tile.locked .sheet { opacity: .52; }
+.purchase-dialog { max-width: 500px; text-align: left; }
+.purchase-dialog p { line-height: 1.6; }
+.purchase-dialog .dialog-heading h2 { font-size: 25px; }
+.purchase-price { color: var(--ink); font-family: var(--display); font-size: 25px; font-weight: 800; margin-bottom: 8px; }
+.purchase-terms { color: var(--muted); font-size: 14px; }
+.purchase-buttons { display: grid; gap: 14px; margin-top: 20px; }
+.purchase-buttons .btn { justify-content: center; text-align: center; }
+.btn:disabled { opacity: .55; cursor: default; }
+.purchase-status { color: var(--muted); font-size: 15px; min-height: 1.5em; }
+.parent-input { box-sizing: border-box; width: 100%; font: inherit; padding: 12px; border: 2px solid var(--line-mid); border-radius: 12px; background: #fff; margin: 12px 0; -webkit-user-select: text; user-select: text; }
+.parent-question { display: block; font-weight: 700; font-size: 20px; color: var(--ink); }
+#parentError { color: var(--bad); }
+#privacyDialog p { line-height: 1.6; }

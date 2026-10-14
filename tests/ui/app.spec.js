@@ -1,0 +1,45 @@
+import { test, expect } from '@playwright/test';
+test('five free pairs, locks, friendly paywall, no fake web payment', async ({ page }) => {
+  const errors = []; page.on('pageerror', e => errors.push(e.message));
+  await page.goto('/');
+  await expect(page.locator('.tile:not(.locked)')).toHaveCount(10);
+  await expect(page.locator('.tile.locked')).toHaveCount(64);
+  await page.getByRole('button', { name: 'wielka literka D, pełna wersja', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Jeszcze więcej literek z Pajączkiem' })).toBeVisible();
+  await expect(page.locator('#paywallCopy')).toContainText('Leona');
+  await expect(page.locator('#purchasePrice')).toContainText('5 zł');
+  await expect(page.locator('#buyBtn')).toBeHidden();
+  await page.getByRole('button', { name: 'Zamknij pełną wersję' }).click();
+  await page.getByRole('button', { name: 'mała literka a', exact: true }).click();
+  await expect(page.locator('#game')).toBeVisible();
+  await expect(page.locator('#soundBtn')).toHaveCount(0);
+  expect(errors).toEqual([]);
+});
+test('settings, parent guide, parent gate and focus restoration', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
+  await page.getByRole('button', { name: 'Informacje dla rodzica', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Od czego zacząć?' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#parentInfoBtn')).toBeFocused();
+  await page.getByRole('button', { name: 'Prywatność', exact: true }).click();
+  await page.locator('#parentAnswer').fill('0');
+  await page.getByRole('button', { name: 'Dalej', exact: true }).click();
+  await expect(page.locator('#parentError')).toContainText('Spróbuj ponownie');
+  const numbers = (await page.locator('#parentQuestion').textContent()).match(/\d+/g).map(Number);
+  await page.locator('#parentAnswer').fill(String(numbers[0] * numbers[1]));
+  await page.getByRole('button', { name: 'Dalej', exact: true }).click();
+  await expect(page.locator('#privacyDialog')).toBeVisible();
+});
+test('small-screen layout and offline game', async ({ page, context }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto('/');
+  await expect(page.locator('.tile')).toHaveCount(74);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await context.setOffline(true);
+  await page.getByRole('button', { name: 'wielka literka Ą', exact: true }).click();
+  await expect(page.locator('#game')).toBeVisible();
+  await page.getByRole('button', { name: 'Wróć do wszystkich literek' }).click();
+  await page.getByRole('button', { name: 'cyferka 0, pełna wersja' }).click();
+  await expect(page.locator('#paywallDialog')).toBeVisible();
+});

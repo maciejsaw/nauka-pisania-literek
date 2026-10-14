@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Pajączek</string>
+    <string name="title_activity_main">Pajączek</string>
+    <string name="package_name">com.maciejsawicki.pajaczek</string>
+    <string name="custom_url_scheme">com.maciejsawicki.pajaczek</string>
+</resources>
