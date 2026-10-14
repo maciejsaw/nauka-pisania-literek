@@ -36,6 +36,15 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         if: github.ref == 'refs/heads/main'
         with: { path: dist }
+  release-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with: { ruby-version: '3.3', bundler-cache: true }
+      - run: bundle exec fastlane lanes
+      - uses: actions/upload-artifact@v4
+        with: { name: ruby-lockfile, path: Gemfile.lock }
   android:
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +54,7 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '21' }
       - uses: android-actions/setup-android@v3
+        with: { packages: "platform-tools platforms;android-36 build-tools;36.0.0" }
       - run: npm ci && npm run sync
       - run: ./gradlew assembleDebug
         working-directory: android

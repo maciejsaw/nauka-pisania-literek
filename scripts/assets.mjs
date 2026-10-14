@@ -1,5 +1,5 @@
 import sharp from 'sharp';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 const svg = await readFile('assets/branding/icon.svg');
 async function png(file, size) { await mkdir(file.slice(0, file.lastIndexOf('/')), { recursive: true }); await sharp(svg).resize(size, size).flatten({ background: '#f9fbfd' }).png().toFile(file); }
 await png('assets/branding/icon-1024.png', 1024);
@@ -19,3 +19,16 @@ const feature = `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="50
 await writeFile('assets/branding/feature.svg', feature);
 await sharp(Buffer.from(feature)).composite([{ input: await sharp(svg).resize(360, 360).png().toBuffer(), left: 35, top: 65 }]).png().toFile('store/android/metadata/pl-PL/images/featureGraphic.png');
 console.log('Ikony i grafiki sklepowe wygenerowane.');
+
+// Replace every generated Android splash density, including pre-Android-12 fallback.
+for (const dir of await readdir('android/app/src/main/res')) {
+  if (!dir.startsWith('drawable')) continue;
+  const target = `android/app/src/main/res/${dir}/splash.png`;
+  try {
+    const { width, height } = await sharp(target).metadata();
+    const logo = await sharp(svg).resize(Math.round(Math.min(width, height) * .28)).png().toBuffer();
+    await sharp({ create: { width, height, channels: 3, background: '#f9fbfd' } }).composite([{ input: logo, gravity: 'centre' }]).png().toFile(target + '.tmp');
+    await writeFile(target, await readFile(target + '.tmp'));
+    await (await import('node:fs/promises')).unlink(target + '.tmp');
+  } catch (error) { if (error.code !== 'ENOENT' && !String(error).includes('Input file is missing')) throw error; }
+}
