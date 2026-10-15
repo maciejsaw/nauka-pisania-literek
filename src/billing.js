@@ -42,6 +42,18 @@ export class Billing {
       return hasFullVersion(customerInfo);
     } finally { this.busy = false; }
   }
+  async syncStoreCode() {
+    if (this.busy || !this.configured) throw new Error('Store unavailable');
+    this.busy = true;
+    try {
+      // Redemption happened in the store app, outside purchaseStoreProduct.
+      await this.sdk.syncPurchases();
+      await this.sdk.invalidateCustomerInfoCache();
+      const { customerInfo } = await this.sdk.getCustomerInfo();
+      this.access.update(customerInfo);
+      return hasFullVersion(customerInfo);
+    } finally { this.busy = false; }
+  }
 }
 export function purchaseError(error) {
   if (error?.userCancelled || String(error?.code) === '1') return 'Zakup anulowany. Możecie dalej korzystać z darmowych literek.';

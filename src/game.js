@@ -1304,7 +1304,7 @@ $('hifive').addEventListener('click', () => {
 function toMenu() { G = null; cancelAnimationFrame(raf); gameEl.hidden = true; resultEl.hidden = true; rewardEl.hidden = true; menuEl.hidden = false; renderMenu(); }
 $('settingsBtn').innerHTML = icon('settings');
 $('closeSettingsBtn').innerHTML = icon('close');
-for (const [id, symbol] of [['fullVersionBtn', 'unlock'], ['parentInfoBtn', 'info'], ['privacyBtn', 'privacy'], ['reviewAccessBtn', 'unlock']]) {
+for (const [id, symbol] of [['fullVersionBtn', 'unlock'], ['redeemCodeBtn', 'unlock'], ['parentInfoBtn', 'info'], ['privacyBtn', 'privacy'], ['reviewAccessBtn', 'unlock']]) {
   $(id).insertAdjacentHTML('afterbegin', icon(symbol));
 }
 $('settingsBtn').addEventListener('click', () => $('settingsDialog').showModal());

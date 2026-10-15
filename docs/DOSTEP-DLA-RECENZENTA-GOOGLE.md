@@ -1,5 +1,7 @@
 # Bezpłatny dostęp do oceny Google
 
+Ten dokument dotyczy prywatnego kodu do oceny. Osobny przycisk **Aktywuj kodem**, dodany w beta.4, obsługuje [oficjalne kody promocyjne sklepów](KODY-PROMOCYJNE.md) dla znajomych i blogerów.
+
 Od Android build **1000003** recenzent może otworzyć **Ustawienia → Dostęp kodem**, rozwiązać bramkę rodzicielską i wpisać prywatny kod. Otrzymuje wszystkie 74 znaki i te same ćwiczenia co płacący użytkownik. Nie potrzebuje konta, płatności, internetu ani konkretnego kraju. Kod nie wygasa i można użyć go ponownie. Nie ma wykrywania recenzentów ani zmienionej wersji treści.
 
 Przycisk jest dostępny na Androidzie. Wersje WWW i iOS go nie oferują. „Wyłącz dostęp kodem” przywraca zwykłe ograniczenia, chyba że użytkownik faktycznie kupił pełną wersję. Pozwala to sprawdzić również normalną ofertę zakupu. Dostęp kodem nie jest testem transakcji — przed testami Google Billing należy go wyłączyć.

@@ -1,4 +1,4 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Nauka pisania literek z Pajączkiem</title><link rel="icon" href="/icon.png"></head><body>
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Nauka pisania literek z Pajączkiem</title><link rel="icon" href="/icon.png"></head><body>
 
 
 
@@ -24,6 +24,7 @@
   <div class="dialog-heading"><h2 id="settingsTitle">Ustawienia</h2><button class="iconbtn" id="closeSettingsBtn" type="button" aria-label="Zamknij ustawienia" autofocus>×</button></div>
   <div class="settings-actions">
     <button class="btn" id="fullVersionBtn" type="button">Pełna wersja i przywracanie zakupu</button>
+    <button class="btn" id="redeemCodeBtn" type="button" aria-haspopup="dialog" hidden>Aktywuj kodem</button>
     <button class="btn" id="soundMenuBtn" type="button" aria-pressed="false"></button>
     <button class="btn" id="penMenuBtn" type="button" aria-pressed="false"></button>
     <button class="btn" id="parentInfoBtn" type="button" aria-haspopup="dialog">Informacje dla rodzica</button>
@@ -122,6 +123,13 @@
   <form id="reviewAccessForm"><label for="reviewAccessCode">Kod dostępu</label><input class="parent-input" id="reviewAccessCode" type="password" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="120" required><button class="btn primary" type="submit">Odblokuj kodem</button></form>
   <p id="reviewAccessStatus" class="purchase-status" role="status" aria-live="polite"></p>
   <button class="btn" id="reviewAccessDisable" type="button" hidden>Wyłącz dostęp kodem</button>
+</dialog>
+<dialog class="settings-dialog" id="storeCodeDialog" aria-labelledby="storeCodeTitle">
+  <div class="dialog-heading"><h2 id="storeCodeTitle">Aktywuj kodem</h2><button class="iconbtn" id="storeCodeClose" type="button" aria-label="Zamknij aktywację kodem">×</button></div>
+  <p id="storeCodeCopy"></p>
+  <form id="storeCodeForm"><label for="storeCodeInput">Kod od autora</label><input class="parent-input" id="storeCodeInput" type="text" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="80" required><button class="btn primary" id="storeCodeSubmit" type="submit">Aktywuj w sklepie</button></form>
+  <p id="storeCodeStatus" class="purchase-status" role="status" aria-live="polite"></p>
+  <button class="btn" id="storeCodeCheck" type="button">Sprawdź odblokowanie</button>
 </dialog>
 <script type="module" src="/src/main.ts"></script>
 

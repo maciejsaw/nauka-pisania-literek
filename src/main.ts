@@ -12,7 +12,10 @@ import './styles.css';
 import './paywall.css';
 import { initStorage } from './storage.js';
 import { initGame } from './game.js';
-import { access, reviewAccess, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
+import { initTouchFeedback } from './touch-feedback.js';
+import { access, reviewAccess, storeCodes, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
+
+initTouchFeedback();
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const paywall = $<HTMLDialogElement>('paywallDialog');
@@ -153,6 +156,64 @@ reviewDisable.addEventListener('click', async () => {
 });
 $('reviewAccessClose').addEventListener('click', () => reviewDialog.close());
 reviewDialog.addEventListener('close', () => { reviewCode.value = ''; });
+
+const codeDialog = $<HTMLDialogElement>('storeCodeDialog');
+const codeInput = $<HTMLInputElement>('storeCodeInput');
+const codeSubmit = $<HTMLButtonElement>('storeCodeSubmit');
+const codeCheck = $<HTMLButtonElement>('storeCodeCheck');
+const codeStatus = $('storeCodeStatus');
+const codeStore = Capacitor.getPlatform() === 'ios' ? 'App Store' : 'Google Play';
+$('storeCodeCopy').textContent = `Masz kod od autora? Wpisz kod przeznaczony dla ${codeStore}. Otworzymy sklep, gdzie potwierdzisz bezpłatne odblokowanie wszystkich literek. Użyj tego samego konta co w aplikacji.`;
+codeSubmit.textContent = `Aktywuj w ${codeStore}`;
+function renderStoreCodes() {
+  $('redeemCodeBtn').hidden = !native || access.full;
+  $('storeCodeForm').hidden = access.paid;
+  codeCheck.hidden = access.paid;
+  if (access.paid) codeStatus.textContent = 'Gotowe! Wszystkie literki i cyferki są odblokowane. Miłego pisania!';
+}
+renderStoreCodes();
+access.addEventListener('change', renderStoreCodes);
+$('redeemCodeBtn').addEventListener('click', () => askParent(async () => {
+  codeStatus.textContent = '';
+  renderStoreCodes();
+  codeDialog.showModal();
+  codeInput.focus();
+}));
+async function checkStoreCode() {
+  if (storeCodes.busy) return;
+  codeCheck.disabled = true;
+  codeSubmit.disabled = true;
+  codeStatus.textContent = 'Sprawdzamy potwierdzenie ze sklepu…';
+  try {
+    await purchaseReady;
+    if (await storeCodes.check()) renderStoreCodes();
+    else codeStatus.textContent = 'Sklep nie potwierdził jeszcze odblokowania. Dokończ aktywację kodu i wróć tutaj. Jeśli kod był już użyty, wybierz „Sprawdź odblokowanie” lub „Przywróć zakup” w ustawieniach.';
+  } catch {
+    codeStatus.textContent = 'Nie udało się sprawdzić kodu w sklepie. Sprawdź internet i wybierz „Sprawdź odblokowanie”.';
+  } finally { codeCheck.disabled = false; codeSubmit.disabled = false; }
+}
+$('storeCodeForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  if (storeCodes.busy) return;
+  codeSubmit.disabled = true;
+  codeStatus.textContent = `Otwieramy ${codeStore}…`;
+  try {
+    await purchaseReady;
+    await storeCodes.open(codeInput.value);
+    codeInput.value = '';
+    codeStatus.textContent = 'Potwierdź kod w sklepie i wróć do Pajączka. Sprawdzimy odblokowanie po powrocie.';
+  } catch (error) {
+    codeStatus.textContent = error instanceof Error && error.message === 'invalid-code'
+      ? 'Sprawdź kod — powinien zawierać litery i cyfry.'
+      : `Nie udało się otworzyć ${codeStore}. Spróbuj ponownie lub użyj kodu bezpośrednio w sklepie, a potem wybierz „Przywróć zakup”.`;
+  } finally { codeSubmit.disabled = false; }
+});
+codeCheck.addEventListener('click', () => void checkStoreCode());
+$('storeCodeClose').addEventListener('click', () => codeDialog.close());
+codeDialog.addEventListener('close', () => { codeInput.value = ''; });
+if (native) void App.addListener('appStateChange', ({ isActive }) => {
+  if (isActive && storeCodes.pending) void checkStoreCode();
+});
 const purchaseReady = initPurchases().catch(() => { /* Free letters always remain usable. */ });
 await reviewAccess.initialize();
 await initStorage();

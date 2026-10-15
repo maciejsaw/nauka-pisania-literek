@@ -28,6 +28,10 @@ Stan sprawdzony 15 października 2026. To zapis wykonanych czynności, nie potwi
 
 ## Pozostałe zadania właściciela
 
+Ponowna kontrola po instalacji TestFlight: Apple **Paid Apps Agreement = Pending User Info**, brak rachunku bankowego i formularza podatkowego. Apple wymaga statusu **Active** także do testowania zakupów. Zgłoszone „Cena jest chwilowo niedostępna” ma więc potwierdzoną blokadę konfiguracji konta; test zakupu i zrzut dialogu z ceną należy wykonać po aktywacji umowy. Nie potwierdzono jeszcze, czy to jedyna przyczyna.
+
+Kody dla znajomych i blogerów będą obsługiwane przez oficjalne sklepy; konfiguracja i warunki tworzenia kodów są w [instrukcji kodów promocyjnych](KODY-PROMOCYJNE.md). Nie wygenerowano jeszcze kodów do rozdawania.
+
 Apple Paid Apps Agreement, status sprzedawcy w UE oraz telefon App Review są **odłożone na wyraźną prośbę właściciela**, do czasu przygotowania nowego numeru. Nie blokują przygotowywania kodu i materiałów. Nie podpisywać umowy ani nie ponawiać pytań o telefon przy wznowieniu, dopóki właściciel nie wróci do tego etapu.
 
 1. **Apple Business — później:** dokończ Paid Apps Agreement, dane podatkowe i bankowe, a następnie Complete Compliance Requirements ze zgodnym z sytuacją statusem sprzedawcy w UE. Aktualizacja danych właściciela nie oznacza automatycznego podpisania umowy. Jeśli trwa weryfikacja Apple, poczekaj na zmianę statusu.

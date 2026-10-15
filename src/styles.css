@@ -26,11 +26,16 @@
   color-scheme: light;
 }
 html, body { height: 100%; }
+html, body, dialog { touch-action: pan-x pan-y; }
 *, *::before, *::after { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-user-drag: none; }
 img, svg, canvas { -webkit-user-drag: none; }
 body { background: var(--paper); color: var(--text); font-family: var(--body); font-size: 16px; -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
 button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+/* Keep the hit target still when pressed: moving it can lose taps near its edge. */
+button:not(:disabled):is(:active, .is-pressed) { filter: brightness(.86); }
+button:is(.btn, .act, .picbtn):not(:disabled):is(:active, .is-pressed) { box-shadow: inset 0 2px 4px #1d3f8f35, 0 1px 0 var(--ink); }
+button:is(.iconbtn, .tile, .hero-btn, .hifive):not(:disabled):is(:active, .is-pressed) { background: var(--paper-2); box-shadow: inset 0 0 0 2px var(--line-mid); }
 .ic { width: 100%; height: 100%; display: block; }
 
 /* ---------- MENU ---------- */
@@ -42,13 +47,14 @@ button:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 .hero-spider { width: 84px; height: 120px; }
 .tools { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0 14px; }
 .btn { border: 2px solid var(--ink); background: var(--paper); border-radius: 14px; padding: 10px 16px; font-family: var(--display); font-weight: 600; font-size: 17px; box-shadow: 0 3px 0 var(--ink); display: inline-flex; align-items: center; gap: 8px; }
-.btn:active, .act:active, .picbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
 .btn.primary { background: var(--ink); color: var(--paper); }
 .btn svg { width: 22px; height: 22px; }
 .page { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 14px 10px; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; }
 .tile { border: 0; background: transparent; padding: 0 0 6px; display: grid; gap: 3px; justify-items: stretch; border-radius: 10px; position: relative; }
-.tile:hover { background: color-mix(in srgb, var(--line-mid) 10%, transparent); }
+@media (hover: hover) and (pointer: fine) {
+  .tile:hover { background: color-mix(in srgb, var(--line-mid) 10%, transparent); }
+}
 .tile svg.sheet { width: 100%; height: auto; display: block; }
 .tile .lbl { position: absolute; top: 2px; left: 6px; font-family: var(--display); font-weight: 600; font-size: 14px; color: var(--muted); }
 .tile .med { position: absolute; top: 0; right: 2px; width: 22px; height: 22px; color: var(--gold-dark); }
@@ -99,7 +105,7 @@ button.lv { border: 0; padding: 0; font: inherit; position: relative; }
 button.lv::after { content: ''; position: absolute; inset: -3px; }
 button.lv:disabled { cursor: default; }
 button.lv:not(:disabled) { cursor: pointer; }
-button.lv:not(:disabled):active { transform: scale(.88); }
+button.lv:not(:disabled):is(:active, .is-pressed) { box-shadow: inset 0 0 0 2px var(--ink); }
 .lv.done { background: #d9e6fa; color: var(--ink); }
 .lv.cur { background: var(--ink); color: #fff; --eye: var(--ink); box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px #9bb5e3; }
 .lv.prize { background: #fbefcf; color: var(--gold-dark); }

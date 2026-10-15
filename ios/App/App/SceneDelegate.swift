@@ -1,6 +1,18 @@
 import UIKit
 import Capacitor
 
+// Keep drawing coordinates stable, while leaving ordinary scrolling available.
+class PajaczekViewController: CAPBridgeViewController {
+    override func capacitorDidLoad() {
+        webView?.scrollView.pinchGestureRecognizer?.isEnabled = false
+        webView?.scrollView.delaysContentTouches = false
+    }
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        UIDevice.current.userInterfaceIdiom == .phone ? .portrait : .all
+    }
+}
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
@@ -8,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = scene as? UIWindowScene else { return }
 
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = CAPBridgeViewController()
+        window?.rootViewController = PajaczekViewController()
         window?.makeKeyAndVisible()
 
         SceneDelegateProxy.shared.scene(scene, willConnectTo: session, options: connectionOptions)

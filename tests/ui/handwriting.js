@@ -10,10 +10,10 @@ export async function openExercise(page, letter, level = 0) {
       localStorage.setItem(key, JSON.stringify({ prog: { [letter]: level } }));
     }
   }, { key: PROGRESS_KEY, letter, level });
-  await page.clock.install();
+  await page.clock.install({ time: new Date('2026-01-01T00:00:00Z') });
+  await page.clock.pauseAt(new Date('2026-01-01T00:01:00Z'));
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
-  await page.clock.pauseAt(await page.evaluate(() => Date.now() + 100));
   const size = letter === letter.toUpperCase() ? 'wielka' : 'mała';
   await page.getByRole('button', { name: `${size} literka ${letter}`, exact: true }).click();
   await page.clock.runFor(32);

@@ -1,10 +1,12 @@
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
 import { Preferences } from '@capacitor/preferences';
+import { AppLauncher } from '@capacitor/app-launcher';
 import { Purchases, ENTITLEMENT_VERIFICATION_MODE } from '@revenuecat/purchases-capacitor';
 import { Access } from './access.js';
 import { Billing } from './billing.js';
 import { ReviewAccess } from './review-access.js';
+import { StoreCodes } from './store-codes.js';
 export { purchaseError } from './billing.js';
 export const native = Capacitor.isNativePlatform();
 const reviewKey = 'pajaczek-review-credential-v1';
@@ -19,6 +21,7 @@ export const reviewAccess = new ReviewAccess({
 });
 export const access = new Access(reviewAccess);
 const billing = new Billing(Purchases, access);
+export const storeCodes = new StoreCodes(Capacitor.getPlatform(), AppLauncher, billing);
 export async function initPurchases() {
   if (!native) return;
   const apiKey = Capacitor.getPlatform() === 'ios' ? import.meta.env.VITE_REVENUECAT_IOS_KEY : import.meta.env.VITE_REVENUECAT_ANDROID_KEY;

@@ -62,7 +62,7 @@ jobs:
             npm run doctor -- --ci
           fi
       - run: npm run typecheck && npm test && npm run check:metadata && npm run build
-      - run: npx playwright install --with-deps chromium
+      - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:ui
   android:
     needs: validate
