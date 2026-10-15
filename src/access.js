@@ -9,8 +9,14 @@ export function hasFullVersion(info) {
 }
 export class Access extends EventTarget {
   #full = false;
-  get full() { return this.#full; }
-  canPlay(ch) { return this.#full || FREE_PAIRS.includes(ch.toLocaleLowerCase('pl')); }
+  constructor(reviewAccess) {
+    super();
+    this.reviewAccess = reviewAccess;
+    reviewAccess?.addEventListener('change', () => this.dispatchEvent(new Event('change')));
+  }
+  get paid() { return this.#full; }
+  get full() { return this.#full || Boolean(this.reviewAccess?.active); }
+  canPlay(ch) { return this.full || FREE_PAIRS.includes(ch.toLocaleLowerCase('pl')); }
   update(info) {
     const next = hasFullVersion(info);
     if (next !== this.#full) { this.#full = next; this.dispatchEvent(new Event('change')); }

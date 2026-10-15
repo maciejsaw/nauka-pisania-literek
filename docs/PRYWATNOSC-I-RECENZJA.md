@@ -17,7 +17,7 @@ Zakup i restore mają bramkę rodzicielską. Zachęta z ceną pojawia się po kl
 
 Pierwszy produkt non-consumable dołącza się do pierwszej wersji iOS ręcznie przed zgłoszeniem. API/Fastlane wysyła build i materiały; nie podpisuje umów w imieniu właściciela i nie zastępuje App Review.
 
-Google App access obejmuje również blokady płatności, nie tylko logowanie. Pięć darmowych par liter nie zapewnia recenzentowi dostępu do całej aplikacji. Przed zgłoszeniem należy przygotować działający, bezpłatny sposób dostępu do pełnej wersji i opisać go po angielsku w konsoli. Nie oznaczać wszystkich funkcji jako dostępnych bez ograniczeń. Nie dodawać ukrytego zachowania wykrywającego recenzenta.
+Google App access obejmuje również blokady płatności, nie tylko logowanie. Pięć darmowych par liter nie zapewnia recenzentowi dostępu do całej aplikacji. Od Android build 1000003 dostępny jest jawny przycisk Ustawienia → Dostęp kodem, za bramką rodzicielską. Prywatny kod pozwala bezpłatnie uruchomić te same ćwiczenia co zakupiona pełna wersja; nie zmienia historii zakupów ani zachowania gry i nie wykrywa recenzentów. W Google należy wybrać dostęp ograniczony i podać instrukcję z kodem. Szczegóły przechowywania i testowania: [Dostęp dla recenzenta Google](DOSTEP-DLA-RECENZENTA-GOOGLE.md).
 
 Źródła:
 - https://developer.apple.com/kids/
@@ -27,3 +27,4 @@ Google App access obejmuje również blokady płatności, nie tylko logowanie. P
 - https://www.revenuecat.com/docs/customers/identifying-customers
 - https://support.google.com/googleplay/android-developer/answer/10787469
 - https://support.google.com/googleplay/android-developer/answer/14151465
+- https://support.google.com/googleplay/android-developer/answer/15748846

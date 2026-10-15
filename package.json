@@ -12,13 +12,14 @@
     "preview": "vite preview --host 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "test:ui": "playwright test",
+    "test:ui": "vite build --mode e2e && playwright test",
     "assets": "node scripts/assets.mjs",
     "screenshots": "node scripts/screenshots.mjs",
     "sync": "npm run build && cap sync",
     "doctor": "node scripts/doctor.mjs",
     "release:version": "node scripts/version.mjs",
     "prebuild": "node scripts/legal.mjs",
+    "postbuild": "node scripts/check-review-bundle.mjs",
     "check:metadata": "node scripts/check-metadata.mjs"
   },
   "dependencies": {

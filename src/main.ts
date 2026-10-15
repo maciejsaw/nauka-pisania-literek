@@ -12,7 +12,7 @@ import './styles.css';
 import './paywall.css';
 import { initStorage } from './storage.js';
 import { initGame } from './game.js';
-import { access, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
+import { access, reviewAccess, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const paywall = $<HTMLDialogElement>('paywallDialog');
@@ -32,8 +32,8 @@ function setBusy(value: boolean) {
   paywall.setAttribute('aria-busy', String(value));
 }
 function success() {
-  $('paywallTitle').textContent = 'Dziękujemy za wsparcie!';
-  $('paywallCopy').textContent = 'Wszystkie literki i cyferki są już dostępne. Autor i Leon dziękują — miłego pisania z Pajączkiem!';
+  $('paywallTitle').textContent = access.paid ? 'Dziękujemy za wsparcie!' : 'Dostęp kodem jest aktywny';
+  $('paywallCopy').textContent = access.paid ? 'Wszystkie literki i cyferki są już dostępne. Autor i Leon dziękują — miłego pisania z Pajączkiem!' : 'Wszystkie ćwiczenia są dostępne bez płatności. Dostęp kodem możesz wyłączyć w ustawieniach, aby wrócić do pięciu darmowych par.';
   $('purchasePrice').textContent = 'Pełna wersja odblokowana';
   buy.hidden = true; restoreBtn.hidden = true;
   status.textContent = '';
@@ -116,7 +116,45 @@ $('fullVersionBtn').addEventListener('click', () => void openPaywall());
 $('privacyBtn').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').showModal());
 $('privacyClose').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').close());
 access.addEventListener('change', () => { if (access.full && paywall.open) success(); });
+const reviewDialog = $<HTMLDialogElement>('reviewAccessDialog');
+const reviewStatus = $('reviewAccessStatus');
+const reviewForm = $<HTMLFormElement>('reviewAccessForm');
+const reviewCode = $<HTMLInputElement>('reviewAccessCode');
+const reviewDisable = $<HTMLButtonElement>('reviewAccessDisable');
+function renderReviewAccess() {
+  reviewForm.hidden = reviewAccess.active;
+  reviewDisable.hidden = !reviewAccess.active;
+  reviewStatus.textContent = reviewAccess.active ? 'Dostęp kodem aktywny. Wszystkie literki i cyferki są odblokowane.' : '';
+}
+$('reviewAccessBtn').hidden = !reviewAccess.enabled;
+$('reviewAccessBtn').addEventListener('click', () => {
+  if (!reviewAccess.enabled) return;
+  askParent(async () => {
+    renderReviewAccess();
+    reviewDialog.showModal();
+    if (!reviewAccess.active) reviewCode.focus();
+  });
+});
+reviewForm.addEventListener('submit', async event => {
+  event.preventDefault();
+  const submit = reviewForm.querySelector<HTMLButtonElement>('button')!;
+  submit.disabled = true;
+  try {
+    if (await reviewAccess.activate(reviewCode.value)) { reviewCode.value = ''; renderReviewAccess(); }
+    else reviewStatus.textContent = 'Ten kod nie pasuje. Sprawdź go i spróbuj ponownie.';
+  } catch { reviewStatus.textContent = 'Nie udało się zapisać dostępu. Spróbuj ponownie.'; }
+  finally { submit.disabled = false; }
+});
+reviewDisable.addEventListener('click', async () => {
+  reviewDisable.disabled = true;
+  try { await reviewAccess.deactivate(); renderReviewAccess(); reviewCode.focus(); }
+  catch { reviewStatus.textContent = 'Nie udało się wyłączyć dostępu. Spróbuj ponownie.'; }
+  finally { reviewDisable.disabled = false; }
+});
+$('reviewAccessClose').addEventListener('click', () => reviewDialog.close());
+reviewDialog.addEventListener('close', () => { reviewCode.value = ''; });
 const purchaseReady = initPurchases().catch(() => { /* Free letters always remain usable. */ });
+await reviewAccess.initialize();
 await initStorage();
 initGame(access, (ch: string) => void openPaywall(ch));
 

@@ -1,4 +1,4 @@
-import { PRODUCT_ID } from './access.js';
+import { PRODUCT_ID, hasFullVersion } from './access.js';
 
 // Store adapter separated from UI so payment failures can be tested without real charges.
 export class Billing {
@@ -30,7 +30,7 @@ export class Billing {
     try {
       const { customerInfo } = await this.sdk.purchaseStoreProduct({ product: this.product });
       this.access.update(customerInfo);
-      return this.access.full;
+      return hasFullVersion(customerInfo);
     } finally { this.busy = false; }
   }
   async restore() {
@@ -39,7 +39,7 @@ export class Billing {
     try {
       const { customerInfo } = await this.sdk.restorePurchases();
       this.access.update(customerInfo);
-      return this.access.full;
+      return hasFullVersion(customerInfo);
     } finally { this.busy = false; }
   }
 }
