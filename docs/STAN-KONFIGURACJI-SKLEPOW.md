@@ -7,7 +7,7 @@ Stan sprawdzony 15 października 2026. To zapis wykonanych czynności, nie potwi
 - Repo: `maciejsaw/nauka-pisania-literek`; identyfikator obu aplikacji: `com.maciejsawicki.pajaczek`.
 - Pełny przebieg taga **v1.0.0-beta.3** zakończył się powodzeniem: testy, podpisanie i wysłanie obu aplikacji. [Wynik GitHub Actions](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38742085327). Testy i publikacja strony WWW również zakończone powodzeniem.
 - Android: wersja 1.0.0, build **1000003**, potwierdzony jako dostępny w testach wewnętrznych. Trzy konta wskazane przez właściciela są testerami aplikacji i zakupów. [Dołącz do testów na Androidzie](https://play.google.com/apps/internaltest/4701129001410143384). Zaloguj się jednym z tych kont; nazwa w Play może jeszcze zawierać `(unreviewed)`.
-- Apple: wersja 1.0.0, nowy build **100.0.3** wysłany i widoczny w TestFlight ze statusem Processing; poprzedni **100.0.2** jest już przetworzony. Grupa `Pajaczek — testy wewnetrzne` automatycznie otrzymuje kolejne buildy. Konto właściciela otrzymało zaproszenie.
+- Apple: wersja 1.0.0, build **100.0.3** przetworzony i przypisany do grupy `Pajaczek — testy wewnetrzne` w TestFlight oraz do szkicu pierwszej wersji. Grupa automatycznie otrzymuje kolejne buildy. Konto właściciela otrzymało zaproszenie.
 - Apple Distribution i profil App Store są poprawne i zostały użyte przez GitHub. Profil jest ważny do 15 października 2027. Mac z Intelem wystarcza; buildy wykonuje GitHub.
 - GitHub ma klucze podpisów, dostęp do Apple i Google oraz publiczne klucze RevenueCat. Prywatny kontakt recenzenta `REVIEW_CONTACT_JSON` pozostaje do uzupełnienia.
 - Produkt **full_version** jest w obu sklepach i w RevenueCat, przypisany do uprawnienia o tej samej nazwie. Zakup jest jednorazowy. Apple: 4,99 zł / 0,99 EUR; Google: 4,99 zł w Polsce / 1,09 EUR w Niemczech i Francji. Aplikacja wyświetla lokalną cenę otrzymaną ze sklepu.
@@ -16,14 +16,15 @@ Stan sprawdzony 15 października 2026. To zapis wykonanych czynności, nie potwi
 - Apple: oba adresy powiadomień (sandbox i produkcja) kierują do RevenueCat. Próba sandbox przez oficjalne API zwróciła **SUCCESS**, a panel RevenueCat potwierdził odbiór 15 października o 12:32 UTC. Próba produkcyjna zwróciła **HTTP 401** — ponowić po aktywacji umowy i sprawdzić przy pierwszym wydaniu. Przyczyna odmowy nie jest jeszcze potwierdzona. Nie jest to test zakupu.
 - Materiały sklepowe wysłane przez **Prepare store listings**: polskie opisy, grafiki Google, 3 zrzuty Android i 6 zrzutów Apple. [Udany przebieg](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38734192683). Workflow nie wysyła ani nie promuje builda; Google może automatycznie skierować metadane do oceny.
 - Apple App Privacy opublikowane za zgodą właściciela: historia zakupów, App Functionality + Analytics, bez powiązania z tożsamością, bez śledzenia reklamowego. Polityka prywatności i strona pomocy są publiczne.
-- Google Data safety: odpowiedzi zapisane jako szkic. Historia zakupów, szyfrowanie, brak kont użytkownika, brak udostępniania poza usługodawcą; adres zgłoszeń usunięcia danych. Finalny zapis zależy od grupy odbiorców i dostępu dla recenzenta.
+- Google Data safety: finalna deklaracja zapisana w Publishing overview, gotowa do oceny razem z aplikacją. Historia zakupów, szyfrowanie, brak kont użytkownika, brak udostępniania poza usługodawcą; adres zgłoszeń usunięcia danych. App content potwierdza brak brakujących deklaracji. `privacyDeclarationsReviewed` ustawiono na `true`; pozostałe nieukończone kontrole pozostają `false`.
 - Google IARC: regulamin zaakceptowany za zgodą właściciela, klasyfikacja ukończona — PEGI 3, ESRB Everyone, oznaczenie zakupów w aplikacji. Deklaracja Advertising ID zapisana jako No.
 - Google Sign in details: zapisano ograniczony dostęp i zatwierdzony przez właściciela prywatny kod z instrukcją po angielsku. Kod odblokowuje te same ćwiczenia bez płatności w Android build 1000003 i nowszych. Opcjonalne udostępnienie do dodatkowych testów na urządzeniach partnerów wyłączone. [Szczegóły](DOSTEP-DLA-RECENZENTA-GOOGLE.md).
 - Nowy mechanizm przeszedł 19 testów logiki i 11 scenariuszy przeglądarkowych, w tym ukończenie liter, bramkę rodzica, błędny kod, restart i wyłączenie dostępu. Testy używają osobnej paczki i symulowanego mostu Androida; nie zastępują testów zakupów na telefonie.
 - Google Managed publishing jest wyłączone. Oznacza to automatyczną publikację zatwierdzonych zmian po ocenie; żadne wydanie produkcyjne nie zostało jeszcze zgłoszone.
+- Google: dostępność produkcyjna zapisana **wyłącznie w Polsce**, zgodnie z decyzją właściciela. Produkcja pozostaje nieaktywna. Target audience: zatwierdzone przez właściciela **6–8 lat**, wymagania Families potwierdzone. Dodatkowy program Teacher Approved pozostawiono wyłączony.
 - Apple IAP: zapisano instrukcję recenzenta po angielsku i potwierdzono jej trwały zapis po ponownym otwarciu produktu. Kopia w `store/ios/iap-review-notes.txt`. Wciąż brakuje zrzutu dialogu zakupu z aplikacji iOS; produkt nie został zgłoszony do oceny.
-- Apple: kategoria Education, klasyfikacja 4+, w formularzu wybrano grupę dzieci 6–8 lat jako odbiorców nauki pisania. Właściciel powinien potwierdzić tę grupę przed pierwszą publikacją.
-- Apple: cena pobrania aplikacji 0 zł, kraj bazowy Polska; dostępność po wydaniu w 175 krajach i regionach. Wydanie obejmuje iPhone/iPad; automatyczna dostępność na Macach Apple Silicon i Vision Pro wyłączona do czasu sprawdzenia tych urządzeń. Build 100.0.2 przypisany do szkicu pierwszej wersji.
+- Apple: kategoria Education, klasyfikacja 4+, grupa dzieci 6–8 lat; właściciel potwierdził tę grupę również przy kończeniu Google.
+- Apple: cena pobrania aplikacji 0 zł, kraj bazowy Polska; dotychczas przygotowana dostępność po wydaniu w 175 krajach i regionach. Najnowszy wybór Polski dotyczył pytania o Google Play; przed publikacją uzgodnić, czy ograniczyć także Apple. Wydanie obejmuje iPhone/iPad; automatyczna dostępność na Macach Apple Silicon i Vision Pro wyłączona do czasu sprawdzenia tych urządzeń.
 
 ## Pozostałe zadania właściciela
 
@@ -39,9 +40,9 @@ Apple Paid Apps Agreement, status sprzedawcy w UE oraz telefon App Review są **
 
 ## Potem asystent
 
-1. Sprawdzić zakończenie przetwarzania Apple 100.0.3 i przypisać aktualny build do szkicu pierwszej wersji, gdy będzie dostępny. Android 1000003 jest już aktywny. Nie wysyłać do publicznej oceny starszego Androida, bo nie obsługuje kodu podanego recenzentowi.
-2. Dokończyć Target audience oraz Data safety w Google. Formularz grupy 6–8 lat przygotowany; oczekuje na potwierdzenie właściciela. Zapis wszystkich krajów produkcyjnych oczekuje na wskazanie zakresu przez właściciela; nie ma jeszcze aktywnej produkcji.
-3. Przejrzeć komplet deklaracji i kartę sklepu po zapisaniu formularzy. Google Managed publishing sprawdzono: Off.
+1. Zebrać wyniki testów na telefonach. Android 1000003 i Apple 100.0.3 są gotowe do testów. Nie wysyłać do publicznej oceny starszego Androida, bo nie obsługuje kodu podanego recenzentowi.
+2. Google Target audience, Data safety, IARC, App access i pozostałe deklaracje są zakończone. Wrócić do nich tylko po zmianie działania aplikacji lub uwagach sklepu.
+3. Po kontroli właściciela zaznaczyć przegląd grafik i kompletność kart sklepowych. Google Managed publishing sprawdzono: Off. Przed produkcją potwierdzić zakres krajów Apple — Google ma już tylko Polskę.
 4. W Apple dodać zrzut produktu i przypisać pierwszy IAP do pierwszej wersji. Cena samej aplikacji i dostępność są ustawione. Uzupełnić prywatny kontakt recenzenta i sprawdzić aktywację umów.
 5. Po faktycznych testach zaznaczyć potwierdzenia w `release-config.json`. Dopiero wtedy uruchomić **Release readiness → production** i przygotować pierwsze zgłoszenie.
 
