@@ -1,5 +1,6 @@
 require 'json'
 require 'fileutils'
+require 'tmpdir'
 ROOT = File.expand_path('..', __dir__)
 CONFIG = JSON.parse(File.read(File.join(ROOT, 'release-config.json')))
 BUNDLE_ID = CONFIG.fetch('bundleId')
@@ -17,11 +18,18 @@ end
 platform :ios do
   desc 'Update the editable store listing without a binary or review submission.'
   lane :listing do
-    upload_to_app_store(api_key: apple_api, app_identifier: BUNDLE_ID,
-      metadata_path: File.join(ROOT, 'store/ios/metadata'), screenshots_path: File.join(ROOT, 'store/ios/screenshots'),
-      skip_binary_upload: true, skip_app_version_update: true, edit_live: false,
-      force: true, overwrite_screenshots: true, submit_for_review: false,
-      run_precheck_before_submit: false, copyright: CONFIG.fetch('copyright'))
+    # Apple requires the complete private contact even when only review notes change.
+    # This lane updates public listing content; the production lane sends review details.
+    Dir.mktmpdir('pajaczek-listing-') do |metadata|
+      Dir.children(File.join(ROOT, 'store/ios/metadata')).reject { |name| name == 'review_information' }.each do |name|
+        FileUtils.cp_r(File.join(ROOT, 'store/ios/metadata', name), metadata)
+      end
+      upload_to_app_store(api_key: apple_api, app_identifier: BUNDLE_ID,
+        metadata_path: metadata, screenshots_path: File.join(ROOT, 'store/ios/screenshots'),
+        skip_binary_upload: true, skip_app_version_update: true, edit_live: false,
+        force: true, overwrite_screenshots: true, submit_for_review: false,
+        run_precheck_before_submit: false, copyright: CONFIG.fetch('copyright'))
+    end
   end
 
   desc 'Sign and archive the iOS app. No store submission.'
@@ -58,13 +66,13 @@ platform :ios do
 end
 
 platform :android do
-  desc 'Save listing materials for review later; never upload or promote a build.'
+  desc 'Update listing materials; Google may review metadata. Never upload or promote a build.'
   lane :listing do
     upload_to_play_store(package_name: BUNDLE_ID, json_key: ENV.fetch('GOOGLE_PLAY_JSON_PATH'),
       metadata_path: File.join(ROOT, 'store/android/metadata'), track: 'internal',
       skip_upload_apk: true, skip_upload_aab: true, skip_upload_changelogs: true,
       skip_upload_metadata: false, skip_upload_images: false, skip_upload_screenshots: false,
-      changes_not_sent_for_review: true, rescue_changes_not_sent_for_review: false)
+      changes_not_sent_for_review: false, rescue_changes_not_sent_for_review: false)
   end
 
   desc 'Create a signed Android App Bundle. No store submission.'

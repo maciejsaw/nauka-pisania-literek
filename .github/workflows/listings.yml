@@ -44,7 +44,7 @@ jobs:
           p.write_text(value);p.chmod(0o600)
           with open(os.environ['GITHUB_ENV'],'a') as f:f.write('GOOGLE_PLAY_JSON_PATH='+str(p)+'\n')
           PY
-      - name: Save descriptions and images, without submitting for review
+      - name: Update descriptions and images without uploading a build
         env:
           PLATFORM: ${{ matrix.platform }}
           ASC_KEY_ID: ${{ vars.ASC_KEY_ID }}

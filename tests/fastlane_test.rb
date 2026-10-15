@@ -82,5 +82,5 @@ calls = probe.run(:android, '', :listing)
 options = calls.last[1]
 check(options[:skip_upload_apk] && options[:skip_upload_aab] && options[:skip_upload_changelogs], 'listing must never upload Android binaries or releases')
 check(!options[:aab] && !options[:track_promote_to], 'listing must not promote a track')
-check(options[:changes_not_sent_for_review] && options[:rescue_changes_not_sent_for_review] == false, 'listing must never retry by submitting changes for review')
+check(options[:track] == 'internal' && !options[:release_status], 'listing must not create a production release')
 puts '8 publishing scenarios passed (store calls mocked; nothing uploaded).'
