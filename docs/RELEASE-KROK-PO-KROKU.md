@@ -22,18 +22,18 @@ Projekt ma wspólny identyfikator `com.maciejsawicki.pajaczek`, nazwę sklepową
 
 Wzory liter i cyfr są niezależnie opracowanymi ścieżkami. Ich pochodzenie zostało potwierdzone; `contentRightsConfirmed` w release-config.json jest już ustawione na `true`. Zestawienie materiałów i licencji używanych zależności znajduje się w THIRD-PARTY-NOTICES.md.
 
-W `release-config.json` wpisz publiczny adres pomocy w `supportEmail`. Strony pomocy i prywatności aktualizują się automatycznie podczas builda. Dane kontaktowe recenzenta (telefon itp.) zapiszesz oddzielnie w sekrecie.
+W `release-config.json` publiczny adres pomocy `supportEmail` jest już ustawiony na `saw.maciej+play@gmail.com`. Strony pomocy i prywatności aktualizują się automatycznie podczas builda. Dane kontaktowe recenzenta (telefon itp.) zapiszesz oddzielnie w sekrecie.
 
 ## 3. Utwórz rekord aplikacji w obu sklepach
 
 **Apple:** w Certificates, Identifiers & Profiles utwórz explicit App ID z Bundle ID `com.maciejsawicki.pajaczek`. In-App Purchase powinno być włączone. W App Store Connect → My Apps → „+” utwórz nową aplikację iOS; nazwa jak wyżej, główny język polski, SKU np. `pajaczek-001`, wybierz ten Bundle ID. Zapisz Apple Team ID z Membership.
 
-**Google:** w Play Console wybierz Create app, nazwę jak wyżej, język polski, bezpłatna aplikacja (pełna wersja jest zakupem wewnątrz). Wybierz właściwą kategorię edukacyjną i faktyczną grupę odbiorców. Package name pochodzi z pierwszej paczki AAB.
+**Google:** w Play Console wybierz Create app, nazwę jak wyżej, język polski, bezpłatna aplikacja (pełna wersja jest zakupem wewnątrz). Jeśli formularz pyta o package name, wpisz `com.maciejsawicki.pajaczek`; identyfikator pierwszej paczki AAB musi być taki sam. Wybierz właściwą kategorię edukacyjną i faktyczną grupę odbiorców.
 
 ## 4. Utwórz projekt RevenueCat i pobierz publiczne klucze SDK
 
 1. Załóż konto w [RevenueCat](https://app.revenuecat.com/) i projekt Pajączek.
-2. Dodaj aplikację App Store z powyższym Bundle ID oraz aplikację Google Play z tym samym package name.
+2. Dodaj aplikację App Store z powyższym Bundle ID oraz aplikację Google Play z tym samym package name. Jeśli formularz wymaga klucza In-App Purchase lub konta usługi już podczas zapisu, najpierw wykonaj odpowiednią część kroku 6, a następnie wróć tutaj. Formularz Apple obecnie wymaga pliku klucza, Key ID i Issuer ID.
 3. W API keys znajdź **publiczne klucze SDK** dla iOS i Android. Nie używaj klucza Secret API `sk_` ani klucza Test Store `test_`.
 4. W repo → Settings → Secrets and variables → Actions → **Variables** dodaj:
 
