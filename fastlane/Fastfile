@@ -15,6 +15,15 @@ def release_channel
 end
 
 platform :ios do
+  desc 'Update the editable store listing without a binary or review submission.'
+  lane :listing do
+    upload_to_app_store(api_key: apple_api, app_identifier: BUNDLE_ID,
+      metadata_path: File.join(ROOT, 'store/ios/metadata'), screenshots_path: File.join(ROOT, 'store/ios/screenshots'),
+      skip_binary_upload: true, skip_app_version_update: true, edit_live: false,
+      force: true, overwrite_screenshots: true, submit_for_review: false,
+      run_precheck_before_submit: false, copyright: CONFIG.fetch('copyright'))
+  end
+
   desc 'Sign and archive the iOS app. No store submission.'
   lane :package do
     keychain = 'pajaczek-ci'
@@ -49,6 +58,15 @@ platform :ios do
 end
 
 platform :android do
+  desc 'Save listing materials for review later; never upload or promote a build.'
+  lane :listing do
+    upload_to_play_store(package_name: BUNDLE_ID, json_key: ENV.fetch('GOOGLE_PLAY_JSON_PATH'),
+      metadata_path: File.join(ROOT, 'store/android/metadata'), track: 'internal',
+      skip_upload_apk: true, skip_upload_aab: true, skip_upload_changelogs: true,
+      skip_upload_metadata: false, skip_upload_images: false, skip_upload_screenshots: false,
+      changes_not_sent_for_review: true, rescue_changes_not_sent_for_review: false)
+  end
+
   desc 'Create a signed Android App Bundle. No store submission.'
   lane :package do
     gradle(task: 'bundle', build_type: 'Release', project_dir: File.join(ROOT, 'android'))

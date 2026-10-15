@@ -20,10 +20,10 @@ class LaneProbe
     @calls << [name, options]
     name == :app_store_connect_api_key ? :test_api : nil
   end
-  def run(platform, channel)
+  def run(platform, channel, lane = :publish)
     ENV['RELEASE_CHANNEL'] = channel
     @calls.clear
-    @lanes.fetch([platform, :publish]).call
+    @lanes.fetch([platform, lane]).call
     @calls
   end
 end
@@ -73,4 +73,14 @@ check(options[:aab].end_with?('/build/android/Pajaczek.aab'), 'publish must use 
     check(probe.calls.empty?, 'unknown channel must fail before any store action')
   end
 end
-puts '6 publishing scenarios passed (store calls mocked; nothing uploaded).'
+calls = probe.run(:ios, '', :listing)
+options = calls.last[1]
+check(calls.map(&:first) == [:app_store_connect_api_key, :upload_to_app_store], 'iOS listing action')
+check(options[:skip_binary_upload] && options[:skip_app_version_update] && options[:edit_live] == false, 'listing must only edit the pending iOS version')
+check(options[:submit_for_review] == false && !options[:ipa], 'listing must never submit a build for review')
+calls = probe.run(:android, '', :listing)
+options = calls.last[1]
+check(options[:skip_upload_apk] && options[:skip_upload_aab] && options[:skip_upload_changelogs], 'listing must never upload Android binaries or releases')
+check(!options[:aab] && !options[:track_promote_to], 'listing must not promote a track')
+check(options[:changes_not_sent_for_review] && options[:rescue_changes_not_sent_for_review] == false, 'listing must never retry by submitting changes for review')
+puts '8 publishing scenarios passed (store calls mocked; nothing uploaded).'
