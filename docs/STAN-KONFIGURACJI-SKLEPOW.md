@@ -5,9 +5,9 @@ Stan sprawdzony 15 października 2026. To zapis wykonanych czynności, nie potwi
 ## Co już działa
 
 - Repo: `maciejsaw/nauka-pisania-literek`; identyfikator obu aplikacji: `com.maciejsawicki.pajaczek`.
-- Pełny przebieg taga **v1.0.0-beta.2** zakończył się powodzeniem: testy, podpisanie i wysłanie obu aplikacji. [Wynik GitHub Actions](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38730803103).
-- Android: wersja 1.0.0, build **1000002**, aktywne testy wewnętrzne. Trzy konta wskazane przez właściciela są testerami aplikacji i zakupów. [Dołącz do testów na Androidzie](https://play.google.com/apps/internaltest/4701129001410143384). Zaloguj się jednym z tych kont; nazwa w Play może jeszcze zawierać `(unreviewed)`.
-- Apple: wersja 1.0.0, build **100.0.2** przetworzony w TestFlight. Grupa `Pajaczek — testy wewnetrzne` automatycznie otrzymuje kolejne buildy. Konto właściciela otrzymało zaproszenie.
+- Pełny przebieg taga **v1.0.0-beta.3** zakończył się powodzeniem: testy, podpisanie i wysłanie obu aplikacji. [Wynik GitHub Actions](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38742085327). Testy i publikacja strony WWW również zakończone powodzeniem.
+- Android: wersja 1.0.0, build **1000003**, potwierdzony jako dostępny w testach wewnętrznych. Trzy konta wskazane przez właściciela są testerami aplikacji i zakupów. [Dołącz do testów na Androidzie](https://play.google.com/apps/internaltest/4701129001410143384). Zaloguj się jednym z tych kont; nazwa w Play może jeszcze zawierać `(unreviewed)`.
+- Apple: wersja 1.0.0, nowy build **100.0.3** wysłany i widoczny w TestFlight ze statusem Processing; poprzedni **100.0.2** jest już przetworzony. Grupa `Pajaczek — testy wewnetrzne` automatycznie otrzymuje kolejne buildy. Konto właściciela otrzymało zaproszenie.
 - Apple Distribution i profil App Store są poprawne i zostały użyte przez GitHub. Profil jest ważny do 15 października 2027. Mac z Intelem wystarcza; buildy wykonuje GitHub.
 - GitHub ma klucze podpisów, dostęp do Apple i Google oraz publiczne klucze RevenueCat. Prywatny kontakt recenzenta `REVIEW_CONTACT_JSON` pozostaje do uzupełnienia.
 - Produkt **full_version** jest w obu sklepach i w RevenueCat, przypisany do uprawnienia o tej samej nazwie. Zakup jest jednorazowy. Apple: 4,99 zł / 0,99 EUR; Google: 4,99 zł w Polsce / 1,09 EUR w Niemczech i Francji. Aplikacja wyświetla lokalną cenę otrzymaną ze sklepu.
@@ -17,30 +17,37 @@ Stan sprawdzony 15 października 2026. To zapis wykonanych czynności, nie potwi
 - Materiały sklepowe wysłane przez **Prepare store listings**: polskie opisy, grafiki Google, 3 zrzuty Android i 6 zrzutów Apple. [Udany przebieg](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38734192683). Workflow nie wysyła ani nie promuje builda; Google może automatycznie skierować metadane do oceny.
 - Apple App Privacy opublikowane za zgodą właściciela: historia zakupów, App Functionality + Analytics, bez powiązania z tożsamością, bez śledzenia reklamowego. Polityka prywatności i strona pomocy są publiczne.
 - Google Data safety: odpowiedzi zapisane jako szkic. Historia zakupów, szyfrowanie, brak kont użytkownika, brak udostępniania poza usługodawcą; adres zgłoszeń usunięcia danych. Finalny zapis zależy od grupy odbiorców i dostępu dla recenzenta.
+- Google IARC: regulamin zaakceptowany za zgodą właściciela, klasyfikacja ukończona — PEGI 3, ESRB Everyone, oznaczenie zakupów w aplikacji. Deklaracja Advertising ID zapisana jako No.
+- Google Sign in details: zapisano ograniczony dostęp i zatwierdzony przez właściciela prywatny kod z instrukcją po angielsku. Kod odblokowuje te same ćwiczenia bez płatności w Android build 1000003 i nowszych. Opcjonalne udostępnienie do dodatkowych testów na urządzeniach partnerów wyłączone. [Szczegóły](DOSTEP-DLA-RECENZENTA-GOOGLE.md).
+- Nowy mechanizm przeszedł 19 testów logiki i 11 scenariuszy przeglądarkowych, w tym ukończenie liter, bramkę rodzica, błędny kod, restart i wyłączenie dostępu. Testy używają osobnej paczki i symulowanego mostu Androida; nie zastępują testów zakupów na telefonie.
+- Google Managed publishing jest wyłączone. Oznacza to automatyczną publikację zatwierdzonych zmian po ocenie; żadne wydanie produkcyjne nie zostało jeszcze zgłoszone.
+- Apple IAP: zapisano instrukcję recenzenta po angielsku i potwierdzono jej trwały zapis po ponownym otwarciu produktu. Kopia w `store/ios/iap-review-notes.txt`. Wciąż brakuje zrzutu dialogu zakupu z aplikacji iOS; produkt nie został zgłoszony do oceny.
 - Apple: kategoria Education, klasyfikacja 4+, w formularzu wybrano grupę dzieci 6–8 lat jako odbiorców nauki pisania. Właściciel powinien potwierdzić tę grupę przed pierwszą publikacją.
 - Apple: cena pobrania aplikacji 0 zł, kraj bazowy Polska; dostępność po wydaniu w 175 krajach i regionach. Wydanie obejmuje iPhone/iPad; automatyczna dostępność na Macach Apple Silicon i Vision Pro wyłączona do czasu sprawdzenia tych urządzeń. Build 100.0.2 przypisany do szkicu pierwszej wersji.
 
-## Teraz właściciel
+## Pozostałe zadania właściciela
 
-1. **Apple Business:** dokończ Paid Apps Agreement, dane podatkowe i bankowe, a następnie Complete Compliance Requirements ze zgodnym z sytuacją statusem sprzedawcy w UE. Aktualizacja danych właściciela nie oznacza automatycznego podpisania umowy. Jeśli trwa weryfikacja Apple, poczekaj na zmianę statusu.
-2. **Kontakt dla Apple App Review:** w prywatnym pliku `secrets/review-contact.json` uzupełnij `phone` z prefiksem kraju. Nie wklejaj go do publicznego repo. Po zgodzie właściciela asystent zapisze komplet w Apple oraz w GitHub Secrets.
+Apple Paid Apps Agreement, status sprzedawcy w UE oraz telefon App Review są **odłożone na wyraźną prośbę właściciela**, do czasu przygotowania nowego numeru. Nie blokują przygotowywania kodu i materiałów. Nie podpisywać umowy ani nie ponawiać pytań o telefon przy wznowieniu, dopóki właściciel nie wróci do tego etapu.
+
+1. **Apple Business — później:** dokończ Paid Apps Agreement, dane podatkowe i bankowe, a następnie Complete Compliance Requirements ze zgodnym z sytuacją statusem sprzedawcy w UE. Aktualizacja danych właściciela nie oznacza automatycznego podpisania umowy. Jeśli trwa weryfikacja Apple, poczekaj na zmianę statusu.
+2. **Kontakt dla Apple App Review — później:** w prywatnym pliku `secrets/review-contact.json` uzupełnij `phone` z prefiksem kraju. Nie wklejaj go do publicznego repo. Po zgodzie właściciela asystent zapisze komplet w Apple oraz w GitHub Secrets.
 3. **Zainstaluj betę:** Android przez powyższy link, iPhone/iPad przez otrzymane zaproszenie TestFlight. W Google upewnij się, że instalujesz i kupujesz tym samym kontem testera.
-4. **Sprawdź zakupy:** najpierw anulowanie, potem testowe odblokowanie, ponowne uruchomienie, tryb offline oraz przywrócenie po reinstalacji. Google powinien pokazać testową formę płatności. Jeśli widzisz zwykłą płatność bez oznaczenia testu, anuluj i zgłoś problem. TestFlight używa środowiska testowego.
+4. **Sprawdź zakupy:** najpierw anulowanie, potem testowe odblokowanie, ponowne uruchomienie, tryb offline oraz przywrócenie po reinstalacji. Jeśli użyto dostępu kodem na Androidzie, najpierw wyłącz go w ustawieniach. Google powinien pokazać testową formę płatności. Jeśli widzisz zwykłą płatność bez oznaczenia testu, anuluj i zgłoś problem. TestFlight używa środowiska testowego.
 5. **Sprawdź ćwiczenie:** ukończ darmową literę, zobacz ekran sukcesu, użyj „Dalej”, sprawdź zapis postępu i wielkie Ą. Zgłoś wynik osobno dla obu platform.
 6. **Zrzut dla oceny zakupu Apple:** zrób zrzut dialogu pełnej wersji w rzeczywistej aplikacji iOS z TestFlight. Potrzebny jest ekran IAP; grafika dialogu z wersji WWW pokazuje inne informacje. Plik pozwoli asystentowi zakończyć materiały produktu.
 7. Sprawdź opisy i zrzuty sklepu oraz docelowy wiek dzieci. Zachowaj prywatną kopię katalogu `secrets/` i haseł. Google może jeszcze wymagać metody wypłat na koncie sprzedawcy.
 
 ## Potem asystent
 
-1. Dokończyć klasyfikację IARC po zgodzie na jej warunki.
-2. Zapewnić recenzentowi Google darmowy dostęp do płatnej części i zapisać konkretne instrukcje po angielsku. Nie zaznaczać, że wszystkie funkcje są bez ograniczeń. Obecna aplikacja nie ma kont użytkowników; sposób dostępu recenzenta wymaga jeszcze przygotowania i sprawdzenia. Sprawdzono oficjalne Promo codes: dla zakupu jednorazowego kody są jednorazowe i wygasają, więc nie zapewniają stałego dostępu przy kolejnych ocenach. Ich utworzenie wymaga dodatkowego regulaminu, którego jeszcze nie zaakceptowano. [Zasady Google](https://support.google.com/googleplay/android-developer/answer/6321495).
-3. Dokończyć Target audience oraz Data safety w Google. Sprawdzić Managed publishing i kraj dystrybucji.
+1. Sprawdzić zakończenie przetwarzania Apple 100.0.3 i przypisać aktualny build do szkicu pierwszej wersji, gdy będzie dostępny. Android 1000003 jest już aktywny. Nie wysyłać do publicznej oceny starszego Androida, bo nie obsługuje kodu podanego recenzentowi.
+2. Dokończyć Target audience oraz Data safety w Google. Formularz grupy 6–8 lat przygotowany; oczekuje na potwierdzenie właściciela. Zapis wszystkich krajów produkcyjnych oczekuje na wskazanie zakresu przez właściciela; nie ma jeszcze aktywnej produkcji.
+3. Przejrzeć komplet deklaracji i kartę sklepu po zapisaniu formularzy. Google Managed publishing sprawdzono: Off.
 4. W Apple dodać zrzut produktu i przypisać pierwszy IAP do pierwszej wersji. Cena samej aplikacji i dostępność są ustawione. Uzupełnić prywatny kontakt recenzenta i sprawdzić aktywację umów.
 5. Po faktycznych testach zaznaczyć potwierdzenia w `release-config.json`. Dopiero wtedy uruchomić **Release readiness → production** i przygotować pierwsze zgłoszenie.
 
 ## Następne tagi
 
-`v1.0.0-beta.1` i `v1.0.0-beta.2` są wykorzystane. Kolejna zmieniona paczka: **v1.0.0-beta.3**. Pierwszy tag produkcyjny: **v1.0.0**, dopiero po zakończeniu powyższych kroków. Nie przesuwaj istniejących tagów. Tag produkcyjny zgłasza wydanie do oceny; decyzja i termin publikacji należą do sklepów.
+`v1.0.0-beta.1`, `v1.0.0-beta.2` i **v1.0.0-beta.3** są wykorzystane. Beta.3 zawiera dostęp kodem dla Google; [przebieg wysyłki](https://github.com/maciejsaw/nauka-pisania-literek/actions/runs/38742085327). Kolejna zmieniona paczka: **v1.0.0-beta.4**. Pierwszy tag produkcyjny: **v1.0.0**, dopiero po zakończeniu powyższych kroków. Nie przesuwaj istniejących tagów. Tag produkcyjny zgłasza wydanie do oceny; decyzja i termin publikacji należą do sklepów.
 
 ## Dane techniczne bez sekretów
 
