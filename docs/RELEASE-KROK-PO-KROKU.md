@@ -1,5 +1,8 @@
 # Od gotowego kodu do pierwszego wydania
 
+> Konfiguracja obu sklepów i beta zostały wykonane 15 października 2026. Zobacz [aktualny stan i następne kroki](STAN-KONFIGURACJI-SKLEPOW.md); nie twórz ponownie istniejących kluczy.
+
+
 Wolisz przejść wydanie wspólnie? [Druga instrukcja: co robisz Ty i kiedy przekazujesz sterowanie asystentowi](https://github.com/maciejsaw/nauka-pisania-literek/blob/main/docs/WYDANIE-RAZEM-Z-ASYSTENTEM.md).
 
 Ta instrukcja jest dla właściciela aplikacji. Kod, ikony, opisy, zrzuty i automatyzacja są w repo. Nie potrzebujesz Maca z procesorem M: iOS kompiluje GitHub na swoim Macu. Twój Intel wystarczy do przygotowania kluczy i wysyłania zmian.
@@ -150,7 +153,7 @@ Adresy:
 
 Sprawdź i uzupełnij politykę w `scripts/legal.mjs`, publiczny supportEmail oraz zgodność z Twoją działalnością. Formularze prywatności muszą uwzględniać RevenueCat, nie zaznaczaj automatycznie „nie zbieramy żadnych danych”. Zobacz `docs/PRYWATNOSC-I-RECENZJA.md`.
 
-Wybierz rzeczywistą grupę wiekową i kategorię dziecięcą, wypełnij Apple age rating oraz Google Target audience/Families, Data Safety, Ads (brak reklam), App access (brak logowania), Content rating i pozostałe zadania konsoli. Uzupełnij wymagane informacje o sprzedawcy/trader status dla dystrybucji w UE. Apple może wymagać dodatkowej korekty położenia bramki rodzicielskiej przed ofertą — nie da się zagwarantować akceptacji layoutu.
+Wybierz rzeczywistą grupę wiekową i kategorię dziecięcą, wypełnij Apple age rating oraz Google Target audience/Families, Data Safety, Ads (brak reklam), App access, Content rating i pozostałe zadania konsoli. App access musi uwzględniać płatną pełną wersję mimo braku logowania: zapewnij recenzentowi bezpłatny dostęp i konkretne instrukcje. Uzupełnij wymagane informacje o sprzedawcy/trader status dla dystrybucji w UE. Apple może wymagać dodatkowej korekty położenia bramki rodzicielskiej przed ofertą — nie da się zagwarantować akceptacji layoutu.
 
 Pierwszy produkt IAP w Apple **ręcznie dołącz do pierwszej wersji aplikacji** w sekcji In-App Purchases. Uzupełnij jego review screenshot. Potem automat zgłasza wersję do oceny razem z przypisanym produktem.
 

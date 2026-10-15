@@ -1,4 +1,5 @@
 # Wydajemy Pajączka razem — kiedy Twoja kolej, kiedy moja
+**Aktualizacja 15 października 2026:** konta, podpisy i wydanie testowe są już skonfigurowane. Zacznij od [aktualnego stanu i krótkiej listy następnych kroków](STAN-KONFIGURACJI-SKLEPOW.md), zamiast powtarzać tworzenie kont i kluczy.
 
 To druga, praktyczna instrukcja: przechodzimy ją wspólnie, po jednym etapie. Ty logujesz się, uzupełniasz dane właściciela i testujesz na telefonach. Ja przygotowuję konfigurację, klucze, materiały i wydania oraz obsługuję dostępne formularze. Nie musisz samodzielnie wykonywać wszystkich technicznych punktów [pierwszej instrukcji](https://github.com/maciejsaw/nauka-pisania-literek/blob/main/docs/RELEASE-KROK-PO-KROKU.md).
 
