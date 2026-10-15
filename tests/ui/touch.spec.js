@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures.js';
-test.use({ hasTouch: true });
+test.use({ hasTouch: true, isMobile: true });
 
 test('single taps open and close dialogs, change settings once and select letters', async ({ page }) => {
   await page.goto('/');
@@ -66,7 +66,13 @@ test('pinch is disabled while one-finger menu scrolling remains available', asyn
     const session = await page.context().newCDPSession(page);
     await session.send('Input.synthesizePinchGesture', { x: 190, y: 430, scaleFactor: 2, gestureSourceType: 'touch' });
     expect(await page.evaluate(() => visualViewport.scale)).toBe(1);
-    await session.send('Input.synthesizeScrollGesture', { x: 190, y: 650, yDistance: -400, gestureSourceType: 'touch' });
+    // Send an actual contact/move/release sequence. synthesizeScrollGesture is
+    // a no-op in some Linux headless builds even with touch emulation enabled.
+    await session.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 190, y: 650 }] });
+    for (let y = 625; y >= 250; y -= 25) {
+      await session.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 190, y }] });
+    }
+    await session.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
     await expect.poll(() => page.evaluate(() => scrollY)).toBeGreaterThan(100);
   }
 });
