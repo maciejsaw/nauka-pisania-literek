@@ -27,34 +27,33 @@ async function openCode(page) {
   await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
   await page.getByRole('button', { name: 'Dostęp kodem', exact: true }).click();
   await expect(page.locator('#reviewAccessDialog')).toBeHidden();
-  const numbers = (await page.locator('#parentQuestion').innerText()).match(/\d+/g).map(Number);
-  await page.locator('#parentAnswer').fill(String(numbers[0] * numbers[1]));
+  await page.getByLabel('Rok urodzenia rodzica', { exact: true }).fill('1985');
   await page.locator('#parentForm button').click();
   await expect(page.locator('#reviewAccessDialog')).toBeVisible();
 }
 test('Android code access: parent gate, invalid code, all letters, restart and disable', async ({ page }) => {
   await nativeDevice(page, 'android');
   await page.goto('/');
-  await expect(page.locator('.tile.locked')).toHaveCount(64);
+  await expect(page.locator('.tile.locked')).toHaveCount(60);
   await openCode(page);
   await page.locator('#reviewAccessCode').fill('WRONG');
   await page.getByRole('button', { name: 'Odblokuj kodem', exact: true }).click();
   await expect(page.locator('#reviewAccessStatus')).toContainText('nie pasuje');
-  await expect(page.locator('.tile.locked')).toHaveCount(64);
+  await expect(page.locator('.tile.locked')).toHaveCount(60);
   await page.locator('#reviewAccessCode').fill(TEST_CODE);
   await page.getByRole('button', { name: 'Odblokuj kodem', exact: true }).click();
   await expect(page.locator('#reviewAccessStatus')).toContainText('aktywny');
   await expect(page.locator('.tile.locked')).toHaveCount(0);
   await page.reload();
   await expect(page.locator('.tile.locked')).toHaveCount(0);
-  await page.getByRole('button', { name: 'wielka literka D', exact: true }).click();
+  await page.getByRole('button', { name: 'wielka literka Ę', exact: true }).click();
   await expect(page.locator('#game')).toBeVisible();
   await page.getByRole('button', { name: 'Wróć do wszystkich literek', exact: true }).click();
   await openCode(page);
   await page.getByRole('button', { name: 'Wyłącz dostęp kodem', exact: true }).click();
-  await expect(page.locator('.tile.locked')).toHaveCount(64);
+  await expect(page.locator('.tile.locked')).toHaveCount(60);
   await page.reload();
-  await expect(page.locator('.tile.locked')).toHaveCount(64);
+  await expect(page.locator('.tile.locked')).toHaveCount(60);
 });
 for (const platform of ['web', 'ios']) {
   test(`code access is unavailable on ${platform}`, async ({ page }) => {
@@ -62,6 +61,6 @@ for (const platform of ['web', 'ios']) {
     await page.goto('/');
     await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
     await expect(page.locator('#reviewAccessBtn')).toBeHidden();
-    await expect(page.locator('.tile.locked')).toHaveCount(64);
+    await expect(page.locator('.tile.locked')).toHaveCount(60);
   });
 }

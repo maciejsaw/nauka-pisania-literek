@@ -13,6 +13,7 @@ import './paywall.css';
 import { initStorage } from './storage.js';
 import { initGame } from './game.js';
 import { initTouchFeedback } from './touch-feedback.js';
+import { isAdultYear } from './parent-gate.js';
 import { access, reviewAccess, storeCodes, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
 
 initTouchFeedback();
@@ -24,7 +25,6 @@ const buy = $<HTMLButtonElement>('buyBtn');
 const restoreBtn = $<HTMLButtonElement>('restoreBtn');
 const status = $('purchaseStatus');
 let parentAction: (() => Promise<void>) | undefined;
-let answer = '';
 let session = 0;
 let busy = false;
 function setBusy(value: boolean) {
@@ -36,7 +36,7 @@ function setBusy(value: boolean) {
 }
 function success() {
   $('paywallTitle').textContent = access.paid ? 'Dziękujemy za wsparcie!' : 'Dostęp kodem jest aktywny';
-  $('paywallCopy').textContent = access.paid ? 'Wszystkie literki i cyferki są już dostępne. Autor i Leon dziękują — miłego pisania z Pajączkiem!' : 'Wszystkie ćwiczenia są dostępne bez płatności. Dostęp kodem możesz wyłączyć w ustawieniach, aby wrócić do pięciu darmowych par.';
+  $('paywallCopy').textContent = access.paid ? 'Wszystkie literki i cyferki są już dostępne. Autor i Leon dziękują — miłego pisania z Pajączkiem!' : 'Wszystkie ćwiczenia są dostępne bez płatności. Dostęp kodem możesz wyłączyć w ustawieniach, aby wrócić do siedmiu darmowych par.';
   $('purchasePrice').textContent = 'Pełna wersja odblokowana';
   buy.hidden = true; restoreBtn.hidden = true;
   status.textContent = '';
@@ -46,7 +46,7 @@ async function openPaywall(ch?: string) {
   $('paywallTitle').textContent = ch ? `Jeszcze więcej literek z Pajączkiem` : 'Pełna wersja z Pajączkiem';
   $('paywallCopy').textContent = 'Ta aplikacja powstała z myślą o moim synku Leonie. Dopracowywaliśmy ją wspólnie podczas wielu prób i ćwiczeń. Za niewielką, jednorazową kwotę odblokujesz wszystkie literki i cyferki, a przy okazji wesprzesz autora i Leona. Dziękujemy!';
   $('purchasePrice').textContent = native ? 'Pobieramy cenę ze sklepu…' : 'Planowana cena pełnej aplikacji: 5 zł';
-  $('purchaseTerms').textContent = 'Pierwsze 5 par jest bezpłatne. Pełna wersja to jeden zakup — bez abonamentu i reklam.';
+  $('purchaseTerms').textContent = 'Pierwsze 7 par jest bezpłatne. Pełna wersja to jeden zakup — bez abonamentu i reklam.';
   buy.textContent = 'Odblokuj pełną wersję';
   buy.hidden = false; restoreBtn.hidden = !native;
   delete buy.dataset.ready;
@@ -77,25 +77,28 @@ async function openPaywall(ch?: string) {
   }
 }
 function askParent(action: () => Promise<void>) {
+  if (parentGate.open) return;
   parentAction = action;
-  const a = 12 + Math.floor(Math.random() * 8), b = 6 + Math.floor(Math.random() * 6);
-  answer = String(a * b);
-  $('parentQuestion').textContent = `Ile to ${a} × ${b}?`;
   $<HTMLInputElement>('parentAnswer').value = '';
   $('parentError').textContent = '';
   parentGate.showModal();
 }
 $('parentForm').addEventListener('submit', async event => {
   event.preventDefault();
-  if ($<HTMLInputElement>('parentAnswer').value.trim() !== answer) {
-    $('parentError').textContent = 'Spróbuj ponownie lub poproś dorosłego o pomoc.'; return;
+  if (!isAdultYear($<HTMLInputElement>('parentAnswer').value)) {
+    $('parentError').textContent = 'Ten krok jest dla osoby dorosłej. Poproś rodzica o wpisanie jego roku urodzenia.'; return;
   }
-  const action = parentAction; parentAction = undefined; answer = '';
+  const action = parentAction; parentAction = undefined;
+  $<HTMLInputElement>('parentAnswer').value = '';
   parentGate.close();
   await action?.();
 });
 $('parentCancel').addEventListener('click', () => parentGate.close());
-parentGate.addEventListener('close', () => { parentAction = undefined; answer = ''; });
+parentGate.addEventListener('close', () => {
+  parentAction = undefined;
+  $<HTMLInputElement>('parentAnswer').value = '';
+  $('parentError').textContent = '';
+});
 $('paywallClose').addEventListener('click', () => paywall.close());
 paywall.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
 paywall.addEventListener('close', () => { session++; });

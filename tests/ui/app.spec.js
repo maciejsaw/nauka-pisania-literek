@@ -1,12 +1,19 @@
 import { test, expect } from './fixtures.js';
-test('five free pairs, locks, friendly paywall, no fake web payment', async ({ page }) => {
+test('seven free pairs, locks, friendly paywall, no fake web payment', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.tile:not(.locked)')).toHaveCount(10);
-  await expect(page.locator('.tile.locked')).toHaveCount(64);
-  await page.getByRole('button', { name: 'wielka literka D, pełna wersja', exact: true }).click();
+  await expect(page.locator('.tile:not(.locked)')).toHaveCount(14);
+  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  for (const letter of ['D', 'd', 'E', 'e']) {
+    await page.getByRole('button', { name: `${letter === letter.toUpperCase() ? 'wielka' : 'mała'} literka ${letter}`, exact: true }).click();
+    await expect(page.locator('#game')).toBeVisible();
+    await expect(page.locator('#paywallDialog')).toBeHidden();
+    await page.locator('#backBtn').click();
+  }
+  await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'Jeszcze więcej literek z Pajączkiem' })).toBeVisible();
   await expect(page.locator('#paywallCopy')).toContainText('Leona');
   await expect(page.locator('#purchasePrice')).toContainText('5 zł');
+  await expect(page.locator('#purchaseTerms')).toContainText('Pierwsze 7 par');
   await expect(page.locator('#buyBtn')).toBeHidden();
   await page.getByRole('button', { name: 'Zamknij pełną wersję' }).click();
   await page.getByRole('button', { name: 'mała literka a', exact: true }).click();

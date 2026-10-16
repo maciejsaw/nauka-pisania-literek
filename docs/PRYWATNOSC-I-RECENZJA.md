@@ -17,7 +17,9 @@ Zakup i restore mają bramkę rodzicielską. Zachęta z ceną pojawia się po kl
 
 Pierwszy produkt non-consumable dołącza się do pierwszej wersji iOS ręcznie przed zgłoszeniem. API/Fastlane wysyła build i materiały; nie podpisuje umów w imieniu właściciela i nie zastępuje App Review.
 
-Google App access obejmuje również blokady płatności, nie tylko logowanie. Pięć darmowych par liter nie zapewnia recenzentowi dostępu do całej aplikacji. Od Android build 1000003 dostępny jest jawny przycisk Ustawienia → Dostęp kodem, za bramką rodzicielską. Prywatny kod pozwala bezpłatnie uruchomić te same ćwiczenia co zakupiona pełna wersja; nie zmienia historii zakupów ani zachowania gry i nie wykrywa recenzentów. W Google należy wybrać dostęp ograniczony i podać instrukcję z kodem. Szczegóły przechowywania i testowania: [Dostęp dla recenzenta Google](DOSTEP-DLA-RECENZENTA-GOOGLE.md).
+Google App access obejmuje również blokady płatności, nie tylko logowanie. Siedem darmowych par liter nie zapewnia recenzentowi dostępu do całej aplikacji. Od Android build 1000003 dostępny jest jawny przycisk Ustawienia → Dostęp kodem, za bramką rodzicielską. Prywatny kod pozwala bezpłatnie uruchomić te same ćwiczenia co zakupiona pełna wersja; nie zmienia historii zakupów ani zachowania gry i nie wykrywa recenzentów. W Google należy wybrać dostęp ograniczony i podać instrukcję z kodem. Szczegóły przechowywania i testowania: [Dostęp dla recenzenta Google](DOSTEP-DLA-RECENZENTA-GOOGLE.md).
+
+Bramka rodzica prosi o czterocyfrowy rok urodzenia osoby dorosłej. Sprawdzenie odbywa się lokalnie; rok nie jest zapisywany ani przesyłany do sklepu lub RevenueCat, a pole jest czyszczone po zamknięciu. To bramka rodzicielska, nie potwierdzenie tożsamości. Prywatność i poradnik rodzica pozostają dostępne bez bramki.
 
 Źródła:
 - https://developer.apple.com/kids/

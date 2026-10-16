@@ -17,10 +17,10 @@ test('only a valid code unlocks; credential is revalidated offline on restart', 
   const { review, storage, access } = fixture();
   for (const invalid of ['', 'true', hash, '0'.repeat(40), null, 'X'.repeat(1000)]) {
     assert.equal(await review.activate(invalid), false);
-    assert.equal(access.canPlay('D'), false);
+    assert.equal(access.canPlay('Ę'), false);
   }
   assert.equal(await review.activate(code.toLowerCase().match(/.{1,5}/g).join('-')), true);
-  assert.equal(access.canPlay('D'), true);
+  assert.equal(access.canPlay('Ę'), true);
   assert.equal(access.paid, false);
   const restarted = new ReviewAccess({ enabled: true, hash, storage });
   await restarted.initialize(); assert.equal(restarted.active, true);

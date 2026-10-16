@@ -108,8 +108,8 @@
 </dialog>
 <dialog class="settings-dialog" id="parentGateDialog" aria-labelledby="parentGateTitle">
   <div class="dialog-heading"><h2 id="parentGateTitle">Chwila dla rodzica</h2><button class="iconbtn" id="parentCancel" type="button" aria-label="Anuluj sprawdzenie rodzica">×</button></div>
-  <p>Ten krok jest dla dorosłego. Rozwiąż działanie, aby kontynuować.</p>
-  <form id="parentForm"><label class="parent-question" for="parentAnswer" id="parentQuestion"></label><input class="parent-input" id="parentAnswer" inputmode="numeric" autocomplete="off" required autofocus><p id="parentError" role="alert"></p><button class="btn primary" type="submit">Dalej</button></form>
+  <p>Rodzicu, wpisz swój rok urodzenia, aby przejść dalej.</p>
+  <form id="parentForm"><label class="parent-question" for="parentAnswer" id="parentQuestion">Rok urodzenia rodzica</label><input class="parent-input" id="parentAnswer" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" aria-describedby="parentPrivacy parentError" required autofocus><p id="parentPrivacy" class="purchase-terms">Sprawdzamy go tylko na tym urządzeniu. Nie zapisujemy go ani nigdzie nie wysyłamy.</p><p id="parentError" role="alert"></p><button class="btn primary" type="submit">Dalej</button></form>
 </dialog>
 <dialog class="settings-dialog" id="privacyDialog" aria-labelledby="privacyTitle">
   <div class="dialog-heading"><h2 id="privacyTitle">Prywatność</h2><button class="iconbtn" id="privacyClose" type="button" aria-label="Zamknij prywatność" autofocus>×</button></div>

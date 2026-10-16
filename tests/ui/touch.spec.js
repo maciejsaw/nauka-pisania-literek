@@ -23,7 +23,7 @@ test('single taps open and close dialogs, change settings once and select letter
   await expect(page.locator('#game')).toBeVisible();
   await page.locator('#backBtn').tap();
   await expect(page.locator('#menu')).toBeVisible();
-  await page.getByRole('button', { name: 'wielka literka D, pełna wersja', exact: true }).tap();
+  await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).tap();
   await expect(page.locator('#paywallDialog')).toBeVisible();
   await page.locator('#paywallClose').tap();
   await expect(page.locator('#paywallDialog')).toBeHidden();

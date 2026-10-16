@@ -1,5 +1,5 @@
 // All entry points use the same rule. Never trust a flag in localStorage for purchases.
-export const FREE_PAIRS = Object.freeze(['a', 'ą', 'b', 'c', 'ć']);
+export const FREE_PAIRS = Object.freeze(['a', 'ą', 'b', 'c', 'ć', 'd', 'e']);
 export const PRODUCT_ID = 'full_version';
 export const ENTITLEMENT_ID = 'full_version';
 export function hasFullVersion(info) {

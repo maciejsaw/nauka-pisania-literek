@@ -6,7 +6,7 @@ Od beta.4 aplikacja ma w ustawieniach przycisk **Aktywuj kodem**. Korzysta z ofi
 
 1. Instaluje Pajączka ze sklepu, dla którego otrzymał kod.
 2. Otwiera **Ustawienia → Aktywuj kodem**. Przycisk znika po odblokowaniu pełnej wersji.
-3. Dorosły rozwiązuje działanie, wpisuje kod i wybiera aktywację w sklepie.
+3. Dorosły podaje swój rok urodzenia (bez zapisywania go), wpisuje kod i wybiera aktywację w sklepie.
 4. W App Store lub Google Play potwierdza bezpłatną ofertę na swoim koncie. Jeśli sklep nie rozpoznaje kodu lub pokazuje zwykłą płatność, nie finalizuje jej.
 5. Wraca do Pajączka. Aplikacja sprawdza potwierdzenie i odblokowuje wszystkie litery oraz cyfry. Jeśli potwierdzenie jeszcze nie dotarło, wybiera **Sprawdź odblokowanie**. Po reinstalacji może użyć **Przywróć zakup** na tym samym koncie sklepu.
 

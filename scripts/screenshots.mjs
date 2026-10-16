@@ -37,7 +37,7 @@ try {
     await page.getByRole('button', { name: 'Prywatność', exact: true }).click();
     await page.screenshot({ path: `build/previews/privacy-${device.name}.png` });
     await page.keyboard.press('Escape'); await page.keyboard.press('Escape');
-    await page.getByRole('button', { name: 'wielka literka D, pełna wersja', exact: true }).click();
+    await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).click();
     await mkdir('build/previews', { recursive: true });
     await page.screenshot({ path: `build/previews/paywall-${device.name}.png` });
     await context.close();
