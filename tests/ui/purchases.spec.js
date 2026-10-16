@@ -6,9 +6,9 @@ for (const platform of ['ios', 'android']) {
     await billingDevice(page, { platform, currency: 'USD' });
     await openOffer(page);
     await expect(page.locator('#parentGateDialog')).toBeHidden();
-    await expect(page.locator('#purchasePrice')).toHaveText('4,99 zł w polskim sklepie');
-    await expect(page.locator('#purchaseTerms')).toContainText('Cenę dla Twojego konta pokaże');
-    await expect(page.locator('#paywallCopy')).toContainText('Autor Maciej i jego syn Leon');
+    await expect(page.locator('#purchasePrice')).toHaveText('4,99 zł jednorazowo');
+    await expect(page.locator('#purchaseTerms')).toBeEmpty();
+    await expect(page.locator('#paywallCopy')).toContainText('Cześć, tu Maciej! Stworzyliśmy tę aplikację razem z synkiem Leonem');
     await expect(page.locator('.purchase-benefits li')).toHaveCount(3);
     await expect(page.locator('#buyBtn')).toHaveText('Kup pełną wersję');
     await expect(page.locator('#buyBtn')).toBeEnabled();
@@ -32,7 +32,7 @@ for (const platform of ['ios', 'android']) {
     // Foreground event from the payment sheet must not replace pending purchase data.
     await page.evaluate(() => window.billingTest.listeners.appStateChange.forEach(fn => fn({ isActive: true })));
     await expect(page.locator('#purchaseProgress')).toBeVisible();
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     await page.screenshot({ path: testInfo.outputPath('waiting.png') });
     await page.evaluate(() => window.billingTest.finishPurchase('paid'));
     await expect(page.locator('#purchaseSuccess')).toBeVisible();
@@ -45,7 +45,7 @@ for (const platform of ['ios', 'android']) {
     await page.screenshot({ path: testInfo.outputPath('success.png') });
     await page.locator('#purchaseContinue').click();
     await expect(page.locator('#paywallDialog')).toBeHidden();
-    await page.getByRole('button', { name: 'wielka literka Ę', exact: true }).click();
+    await page.getByRole('button', { name: 'mała literka ę', exact: true }).click();
     await expect(page.locator('#game')).toBeVisible();
     await page.reload();
     await expect(page.locator('.tile.locked')).toHaveCount(0);
@@ -83,7 +83,7 @@ test('cancelled or failed payments stop the spinner and return to the offer', as
     await expect(page.locator('#purchaseOffer')).toBeVisible();
     await expect(page.locator('#purchaseStatus')).toContainText(outcome === 'cancel' ? 'anulowany' : 'Nie udało się');
     await expect(page.locator('#buyBtn')).toBeEnabled();
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
   }
 });
 
@@ -94,7 +94,7 @@ test('payment stays busy while fresh confirmation is fetched, then unlocks', asy
   await page.evaluate(() => { window.billingTest.holdConfirmation = true; window.billingTest.finishPurchase('unconfirmed'); });
   await expect.poll(() => page.evaluate(() => !!window.billingTest.finishConfirmation)).toBe(true);
   await expect(page.locator('#purchaseProgress')).toBeVisible();
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
   await page.evaluate(() => window.billingTest.finishConfirmation(true));
   await expect(page.locator('#purchaseSuccess')).toBeVisible();
   await expect(page.locator('#purchaseProgress')).toBeHidden();
@@ -110,7 +110,7 @@ for (const outcome of ['unconfirmed', 'pending']) {
     await expect(page.locator('#purchaseProgress')).toBeHidden();
     await expect(page.locator('#buyBtn')).toBeHidden();
     await expect(page.locator('#restoreBtn')).toHaveText('Sprawdź zakup');
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     await page.evaluate(() => window.billingTest.notify(true));
     await expect(page.locator('#purchaseSuccess')).toBeVisible();
     await expect(page.locator('.tile.locked')).toHaveCount(0);
@@ -123,7 +123,7 @@ test('missing price can be retried and restores require a parent', async ({ page
   await expect(page.locator('#buyBtn')).toBeDisabled();
   await page.evaluate(() => { window.billingTest.noProduct = false; });
   await page.locator('#purchaseRetry').click();
-  await expect(page.locator('#purchasePrice')).toHaveText('4,99 zł — jednorazowo');
+  await expect(page.locator('#purchasePrice')).toHaveText('4,99 zł jednorazowo');
   await expect(page.locator('#buyBtn')).toBeEnabled();
   await page.locator('#restoreBtn').click();
   await expect(page.locator('#parentGateDialog')).toBeVisible();

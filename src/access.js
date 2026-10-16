@@ -1,5 +1,6 @@
+import { LETTERS } from './letters.js';
 // All entry points use the same rule. Never trust a flag in localStorage for purchases.
-export const FREE_PAIRS = Object.freeze(['a', 'ą', 'b', 'c', 'ć', 'd', 'e']);
+export const FREE_LETTERS = Object.freeze(['a', 'ą', 'b', 'c', 'ć', 'd', 'e']);
 export const PRODUCT_ID = 'full_version';
 export const ENTITLEMENT_ID = 'full_version';
 export function hasFullVersion(info) {
@@ -16,7 +17,7 @@ export class Access extends EventTarget {
   }
   get paid() { return this.#full; }
   get full() { return this.#full || Boolean(this.reviewAccess?.active); }
-  canPlay(ch) { return this.full || FREE_PAIRS.includes(ch.toLocaleLowerCase('pl')); }
+  canPlay(ch) { return Object.hasOwn(LETTERS, ch) && (this.full || FREE_LETTERS.includes(ch.toLocaleLowerCase('pl'))); }
   update(info) {
     const next = hasFullVersion(info);
     if (next !== this.#full) { this.#full = next; this.dispatchEvent(new Event('change')); }

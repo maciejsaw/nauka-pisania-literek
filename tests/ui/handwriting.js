@@ -15,7 +15,8 @@ export async function openExercise(page, letter, level = 0) {
   await page.goto('/');
   await page.evaluate(() => document.fonts.ready);
   const size = letter === letter.toUpperCase() ? 'wielka' : 'mała';
-  await page.getByRole('button', { name: `${size} literka ${letter}`, exact: true }).click();
+  const label = /^[0-9]$/.test(letter) ? `cyferka ${letter}` : `${size} literka ${letter}`;
+  await page.getByRole('button', { name: label, exact: true }).click();
   await page.clock.runFor(32);
 }
 

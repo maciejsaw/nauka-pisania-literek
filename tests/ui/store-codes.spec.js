@@ -40,16 +40,16 @@ for (const platform of ['ios', 'android']) {
   test(`${platform}: parent gate, store code, cancelled redemption and confirmed unlock`, async ({ page }) => {
     await device(page, platform);
     await page.goto('/');
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     await openCodes(page);
     await page.locator('#storeCodeInput').fill('przyjaciel');
     await page.locator('#storeCodeSubmit').tap();
     await expect.poll(() => page.evaluate(() => window.storeTest.urls[0])).toContain(platform === 'ios' ? 'https://apps.apple.com/redeem?' : 'https://play.google.com/redeem?');
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     // Returning without a redemption must not grant anything.
     await page.evaluate(() => window.storeTest.listeners.appStateChange.forEach(fn => fn({ isActive: true })));
     await expect(page.locator('#storeCodeStatus')).toContainText('nie potwierdził');
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     await page.evaluate(() => { window.storeTest.paid = true; });
     await page.locator('#storeCodeCheck').tap();
     await expect(page.locator('#storeCodeStatus')).toContainText('Gotowe!');
@@ -57,7 +57,7 @@ for (const platform of ['ios', 'android']) {
     await expect(page.locator('#redeemCodeBtn')).toBeHidden();
     await page.locator('#storeCodeClose').tap();
     await page.locator('#closeSettingsBtn').tap();
-    await page.getByRole('button', { name: 'wielka literka Ę', exact: true }).tap();
+    await page.getByRole('button', { name: 'mała literka ę', exact: true }).tap();
     await expect(page.locator('#game')).toBeVisible();
   });
   test(`${platform}: paid installation hides code activation`, async ({ page }) => {
@@ -78,11 +78,11 @@ test('offline or failed launch can be retried', async ({ page }) => {
   await page.evaluate(() => { window.storeTest.offline = true; });
   await page.locator('#storeCodeCheck').tap();
   await expect(page.locator('#storeCodeStatus')).toContainText('Nie udało się sprawdzić');
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
 });
 test('web demo does not offer store code activation', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.tile')).toHaveCount(74);
+  await expect(page.locator('.tile')).toHaveCount(72);
   await page.locator('#settingsBtn').tap();
   await expect(page.locator('#redeemCodeBtn')).toBeHidden();
 });

@@ -3,7 +3,7 @@ test.use({ hasTouch: true, isMobile: true });
 
 test('single taps open and close dialogs, change settings once and select letters', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.tile')).toHaveCount(74);
+  await expect(page.locator('.tile')).toHaveCount(72);
   for (let i = 0; i < 3; i++) {
     await page.locator('#settingsBtn').tap();
     await expect(page.locator('#settingsDialog')).toBeVisible();
@@ -23,7 +23,7 @@ test('single taps open and close dialogs, change settings once and select letter
   await expect(page.locator('#game')).toBeVisible();
   await page.locator('#backBtn').tap();
   await expect(page.locator('#menu')).toBeVisible();
-  await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).tap();
+  await page.getByRole('button', { name: 'mała literka ę, pełna wersja', exact: true }).tap();
   await expect(page.locator('#paywallDialog')).toBeVisible();
   await page.locator('#paywallClose').tap();
   await expect(page.locator('#paywallDialog')).toBeHidden();
@@ -31,7 +31,7 @@ test('single taps open and close dialogs, change settings once and select letter
 
 test('pressed feedback does not move hit targets and clears on cancel or release', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('.tile')).toHaveCount(74);
+  await expect(page.locator('.tile')).toHaveCount(72);
   for (const id of ['settingsBtn', 'heroBtn', 'tile-32']) {
     const button = page.locator(`#${id}`);
     const box = await button.boundingBox();
@@ -56,7 +56,7 @@ test('pressed feedback does not move hit targets and clears on cancel or release
 
 test('pinch is disabled while one-finger menu scrolling remains available', async ({ page, browserName }) => {
   await page.goto('/');
-  await expect(page.locator('.tile')).toHaveCount(74);
+  await expect(page.locator('.tile')).toHaveCount(72);
   expect(await page.evaluate(() => getComputedStyle(document.documentElement).touchAction)).toBe('pan-x pan-y');
   expect(await page.evaluate(() => {
     const event = new Event('gesturestart', { cancelable: true });

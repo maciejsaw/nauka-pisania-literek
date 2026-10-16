@@ -1,14 +1,8 @@
-// TestFlight can return USD metadata while the payment sheet uses PLN.
-// A Polish reference price must never be presented as a converted store price.
-export function paywallPrice(product, store) {
-  if (product.currencyCode && product.currencyCode !== 'PLN') {
-    return {
-      price: '4,99 zł w polskim sklepie',
-      note: `Cenę dla Twojego konta pokaże ${store} przed potwierdzeniem.`,
-    };
-  }
+// Approved Polish offer copy. TestFlight can return USD metadata for a PLN sheet.
+// Keep real PLN price changes; the configured Polish fallback is not an FX conversion.
+export function paywallPrice(product) {
   return {
-    price: `${product.priceString} — jednorazowo`,
+    price: `${product.currencyCode === 'PLN' && product.priceString ? product.priceString : '4,99 zł'} jednorazowo`,
     note: '',
   };
 }

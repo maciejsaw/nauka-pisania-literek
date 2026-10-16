@@ -33,7 +33,7 @@ test('write a letter with the spider, continue without it and keep progress afte
   await expect(page.locator('#levels .cur')).toHaveAttribute('aria-label', 'Poziom 3: Szybszy pokaz');
 });
 
-for (const letter of ['Ą', 'ć']) {
+for (const letter of ['ą', 'ć']) {
   test(`finish every stroke of ${letter}, including its diacritic`, async ({ page }) => {
     await openExercise(page, letter);
     await writeLetter(page, letter);

@@ -53,5 +53,5 @@ export async function confirmParent(page) {
 }
 export async function openOffer(page) {
   await page.goto('/');
-  await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).click();
+  await page.getByRole('button', { name: 'mała literka ę, pełna wersja', exact: true }).click();
 }

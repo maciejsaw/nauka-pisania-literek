@@ -8,7 +8,7 @@ for (const platform of ['ios', 'android']) {
   test(`${platform}: rating is optional, parent-gated and never unlocks paid letters`, async ({ page }, testInfo) => {
     await storeDevice(page, platform);
     await page.goto('/');
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
     await expect(page.locator('dialog[open]')).toHaveCount(0);
     expect(await page.evaluate(() => window.storeTest.urls)).toEqual([]);
     await page.locator('#settingsBtn').tap();
@@ -39,7 +39,7 @@ for (const platform of ['ios', 'android']) {
     await expect(page.locator('#ratingDialog')).toBeHidden();
     await expect(page.locator('#parentAnswer')).toHaveValue('');
     await expect(page.locator('#rateAppBtn')).toBeEnabled();
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
   });
 }
 test('failed store launch has a retry and does not leave settings stuck', async ({ page }) => {

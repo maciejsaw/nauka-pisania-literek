@@ -4,7 +4,7 @@ import { saveProgress, loadProgress } from './storage.js';
 
 export function initGame(access, openPaywall) {
 const LOWER = ['a','ą','b','c','ć','d','e','ę','f','g','h','i','j','k','l','ł','m','n','ń','o','ó','p','r','s','ś','t','u','w','y','z','ź','ż'];
-const UPPER = LOWER.map((c) => c.toUpperCase());
+const UPPER = LOWER.map((c) => c.toUpperCase()).filter((c) => Object.hasOwn(LETTERS, c));
 const DIGITS = ['0','1','2','3','4','5','6','7','8','9'];
 const ORDER = LOWER.concat(UPPER, DIGITS);
 const isDigit = (c) => c >= '0' && c <= '9';
@@ -187,7 +187,9 @@ function tileHTML(ch) {
 function renderMenu() {
   const page = document.getElementById('page');
   page.innerHTML = '<h2 class="sect" id="secLetters">Literki</h2>'
-    + UPPER.map((U, i) => `<div class="pair">${tileHTML(U)}${tileHTML(LOWER[i])}</div>`).join('')
+    + LOWER.map((ch) => `<div class="pair">${Object.hasOwn(LETTERS, ch.toUpperCase())
+      ? tileHTML(ch.toUpperCase()) + tileHTML(ch)
+      : tileHTML(ch) + '<span class="tile-spacer" aria-hidden="true"></span>'}</div>`).join('')
     + '<h2 class="sect" id="secDigits">Cyferki</h2>'
     + [0, 1, 2, 3, 4].map((i) => `<div class="pair">${tileHTML(DIGITS[2 * i])}${tileHTML(DIGITS[2 * i + 1])}</div>`).join('');
   page.querySelectorAll('.tile').forEach((b) => b.addEventListener('click', () => { audio(); startLetter(b.dataset.ch, resumeLevel(b.dataset.ch)); }));

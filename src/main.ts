@@ -62,7 +62,7 @@ function success() {
   $('purchaseOffer').hidden = true;
   $('purchaseSuccess').hidden = false;
   $('purchaseSuccessCopy').textContent = access.paid
-    ? 'Wszystkie literki i cyferki są już dostępne. Autor Maciej i jego syn Leon dziękują za wsparcie!'
+    ? 'Wszystkie literki i cyferki są już dostępne. Dziękujemy za wsparcie! Życzymy udanej zabawy!'
     : 'Kod odblokował wszystkie literki i cyferki. Miłego pisania z Pajączkiem!';
   buy.hidden = true; restoreBtn.hidden = true;
   $('purchaseRetry').hidden = true;
@@ -74,8 +74,8 @@ async function openPaywall() {
   const current = ++session;
   paywall.dataset.state = 'offer';
   $('paywallTitle').textContent = 'Wszystkie literki i cyferki';
-  $('paywallCopy').textContent = 'Autor Maciej i jego syn Leon dopracowali Pajączka podczas wielu wspólnych ćwiczeń — kupując pełną wersję, wspierasz ich pracę.';
-  $('purchasePrice').textContent = native ? 'Pobieramy cenę…' : '4,99 zł w polskim sklepie';
+  $('paywallCopy').textContent = 'Cześć, tu Maciej! Stworzyliśmy tę aplikację razem z synkiem Leonem i spędziliśmy sporo czasu na dopracowaniu szczegółów. Zapraszamy do kupna pełnej wersji za symboliczną kwotę.';
+  $('purchasePrice').textContent = native ? 'Pobieramy cenę…' : '4,99 zł jednorazowo';
   $('purchaseTerms').textContent = '';
   $('purchaseOffer').hidden = false;
   $('purchaseSuccess').hidden = true;
@@ -98,7 +98,7 @@ async function openPaywall() {
     if (current !== session || !paywall.open) return;
     if (access.full) { success(); return; }
     if (!product) throw new Error('unavailable');
-    const price = paywallPrice(product, storeName);
+    const price = paywallPrice(product);
     $('purchasePrice').textContent = price.price;
     $('purchaseTerms').textContent = price.note;
     buy.textContent = 'Kup pełną wersję';

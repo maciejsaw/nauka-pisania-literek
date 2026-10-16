@@ -34,26 +34,26 @@ async function openCode(page) {
 test('Android code access: parent gate, invalid code, all letters, restart and disable', async ({ page }) => {
   await nativeDevice(page, 'android');
   await page.goto('/');
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
   await openCode(page);
   await page.locator('#reviewAccessCode').fill('WRONG');
   await page.getByRole('button', { name: 'Odblokuj kodem', exact: true }).click();
   await expect(page.locator('#reviewAccessStatus')).toContainText('nie pasuje');
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
   await page.locator('#reviewAccessCode').fill(TEST_CODE);
   await page.getByRole('button', { name: 'Odblokuj kodem', exact: true }).click();
   await expect(page.locator('#reviewAccessStatus')).toContainText('aktywny');
   await expect(page.locator('.tile.locked')).toHaveCount(0);
   await page.reload();
   await expect(page.locator('.tile.locked')).toHaveCount(0);
-  await page.getByRole('button', { name: 'wielka literka Ę', exact: true }).click();
+  await page.getByRole('button', { name: 'mała literka ę', exact: true }).click();
   await expect(page.locator('#game')).toBeVisible();
   await page.getByRole('button', { name: 'Wróć do wszystkich literek', exact: true }).click();
   await openCode(page);
   await page.getByRole('button', { name: 'Wyłącz dostęp kodem', exact: true }).click();
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
   await page.reload();
-  await expect(page.locator('.tile.locked')).toHaveCount(60);
+  await expect(page.locator('.tile.locked')).toHaveCount(59);
 });
 for (const platform of ['web', 'ios']) {
   test(`code access is unavailable on ${platform}`, async ({ page }) => {
@@ -61,6 +61,6 @@ for (const platform of ['web', 'ios']) {
     await page.goto('/');
     await page.getByRole('button', { name: 'Ustawienia', exact: true }).click();
     await expect(page.locator('#reviewAccessBtn')).toBeHidden();
-    await expect(page.locator('.tile.locked')).toHaveCount(60);
+    await expect(page.locator('.tile.locked')).toHaveCount(59);
   });
 }

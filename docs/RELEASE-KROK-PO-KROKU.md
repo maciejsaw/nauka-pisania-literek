@@ -129,11 +129,11 @@ Pipeline wysyła do TestFlight i Google Internal testing. W Apple przypisz build
 
 Na prawdziwym iPhonie/iPadzie i Androidzie sprawdź:
 
-- 14 darmowych znaków (7 par: A/a, Ą/ą, B/b, C/c, Ć/ć, D/d i E/e), pozostałe z kłódką.
+- 13 darmowych znaków (7 liter w dostępnych wariantach: A/a, ą, B/b, C/c, Ć/ć, D/d i E/e), pozostałe z kłódką.
 - Kliknięcie kłódki, tekst o Leonie i **lokalna cena ze sklepu**.
 - Bramka rodzica: rok urodzenia osoby dorosłej pozwala przejść dalej, rok dziecka i niepoprawne dane nie pozwalają. Anulowanie niczego nie otwiera, a wpisany rok nie pozostaje w polu.
 - Anulowanie zakupu → nadal demo.
-- Zakup testowy → wszystkie 74 znaki dostępne, także po ponownym uruchomieniu.
+- Zakup testowy → wszystkie 72 znaki dostępne, także po ponownym uruchomieniu.
 - Oczekujący zakup/Ask to Buy → bez przedwczesnego odblokowania.
 - Odblokowanie bez internetu po wcześniejszym zakupie i ponownym uruchomieniu.
 - Przywracanie po reinstalacji i na drugim urządzeniu, na tym samym koncie sklepu.

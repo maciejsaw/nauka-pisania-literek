@@ -114,9 +114,9 @@ Sekrety zapisujemy w lokalnym, ignorowanym katalogu `secrets/` i w GitHub Secret
 **Twoja kolej**
 
 1. Zainstaluj aplikacje przez TestFlight i testy wewnętrzne Google na odpowiednich kontach testerów. Poczekaj, aż potwierdzimy konfigurację zakupów testowych; Google wymaga właściwego konta testera płatności.
-2. Napisz darmową literkę do końca. Sprawdź ekran sukcesu, „Dalej”, ponowną próbę i zapis po zamknięciu aplikacji. Sprawdź też Ą z ogonkiem, obrót ekranu oraz rysik, jeśli go używasz.
+2. Napisz darmową literkę do końca. Sprawdź ekran sukcesu, „Dalej”, ponowną próbę i zapis po zamknięciu aplikacji. Sprawdź też ą z ogonkiem, obrót ekranu oraz rysik, jeśli go używasz.
 3. Kliknij zablokowaną literkę: sprawdź cenę, tekst o autorze i Leonie oraz bramkę rodzica.
-4. Najpierw anuluj zakup, potem wykonaj zakup testowy. Po zakupie wszystkie 74 znaki powinny być dostępne również po ponownym uruchomieniu i bez internetu.
+4. Najpierw anuluj zakup, potem wykonaj zakup testowy. Po zakupie wszystkie 72 znaki powinny być dostępne również po ponownym uruchomieniu i bez internetu.
 5. Sprawdź przywrócenie po reinstalacji, oczekujący zakup i cofnięcie uprawnienia według wskazówek, które podam dla danego sklepu. Pełna lista jest w kroku 9 pierwszej instrukcji.
 
 **Przekaż mi sterowanie:** „Testy na iOS: …; na Androidzie: …; problemy: …”. Jeśli czegoś nie udało się przetestować, zaznacz to wprost.
