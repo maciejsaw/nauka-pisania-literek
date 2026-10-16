@@ -6,6 +6,8 @@ Polska aplikacja do ćwiczenia pisania, przygotowana jako strona WWW oraz projek
 
 **Wydajemy razem: [co robisz Ty, a kiedy przekazujesz sterowanie asystentowi](docs/WYDANIE-RAZEM-Z-ASYSTENTEM.md).**
 
+**Przy wznowieniu pracy: [aktualny stan, testy na telefonach i kolejne kroki](docs/STAN-KONFIGURACJI-SKLEPOW.md).**
+
 - Darmowe: A/a, ą, B/b, C/c, Ć/ć, D/d i E/e.
 - Pozostałe litery i cyfry: jednorazowy produkt `full_version` (RevenueCat + natywne sklepy).
 - WWW: demo bez zakupu; mobilne zakupy działają po skonfigurowaniu kluczy i produktów.

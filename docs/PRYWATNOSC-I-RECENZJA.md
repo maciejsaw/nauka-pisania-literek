@@ -37,7 +37,7 @@ Kliknięcie kłódki pokazuje ofertę. Dopiero „Kup pełną wersję” urucham
 
 Przy cenie w PLN aplikacja używa aktualnej wartości ze sklepu. Od beta.8 przy metadanych w innej walucie pokazuje zatwierdzony przez właściciela tekst „4,99 zł jednorazowo”, bez dodatkowego dopisku. Dotyczy to polskiej oferty, której cena pozostaje ustawiona w sklepach. To nie jest przeliczenie waluty ani gwarancja ceny dla zagranicznego konta. [RevenueCat opisuje rozbieżność USD/PLN w TestFlight](https://www.revenuecat.com/docs/test-and-launch/sandbox/apple-app-store). Gdy zmieni się polska cena produktu, zaktualizuj również cenę odniesienia w `src/paywall-price.js` i wersji WWW.
 
-Testy obejmują opóźnione potwierdzenie, anulowanie, błąd połączenia, przywrócenie, ponowne uruchomienie, spóźnioną odpowiedź po zamknięciu okna, cofnięcie dostępu oraz bezpieczne odstępy na iPhonie. Sklepy są w nich symulowane. Przed produkcją właściciel musi potwierdzić cały zakup na prawdziwych urządzeniach; `sandboxPurchasesVerified` pozostaje `false`.
+Testy obejmują opóźnione potwierdzenie, anulowanie, błąd połączenia, przywrócenie, ponowne uruchomienie, spóźnioną odpowiedź po zamknięciu okna, cofnięcie dostępu oraz bezpieczne odstępy na iPhonie. Sklepy są w nich symulowane. 16 października właściciel potwierdził, że bezpłatne płatności testowe działają na kontach testerskich w iOS i Androidzie. Do sprawdzenia pozostają szczegóły zachowania po zakupie, anulowanie, offline i przywracanie; listę oraz wyniki zapisujemy w [stanie konfiguracji](STAN-KONFIGURACJI-SKLEPOW.md#co-teraz-sprawdzić-na-androidzie-i-ios). `sandboxPurchasesVerified` pozostaje `false` do zakończenia pełnej kontroli na telefonach.
 
 ## Dobrowolna ocena aplikacji (beta.7)
 
