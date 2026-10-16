@@ -28,6 +28,7 @@
     <button class="btn" id="soundMenuBtn" type="button" aria-pressed="false"></button>
     <button class="btn" id="penMenuBtn" type="button" aria-pressed="false"></button>
     <button class="btn" id="parentInfoBtn" type="button" aria-haspopup="dialog">Informacje dla rodzica</button>
+    <button class="btn" id="rateAppBtn" type="button" aria-haspopup="dialog" hidden>Oceń aplikację</button>
     <button class="btn" id="privacyBtn" type="button">Prywatność</button>
     <button class="btn" id="reviewAccessBtn" type="button" aria-haspopup="dialog" hidden>Dostęp kodem</button>
   </div>
@@ -123,6 +124,12 @@
   <p>Rysunki i postęp ćwiczeń pozostają na tym urządzeniu. Aplikacja nie ma reklam, kont dziecka ani analityki zachowania.</p>
   <p>W wersji mobilnej zakupy obsługują Apple lub Google oraz RevenueCat. RevenueCat przetwarza identyfikator instalacji, dane transakcji i techniczne informacje potrzebne do potwierdzenia dostępu. Nie przekazujemy tam rysunków ani imienia dziecka.</p>
   <p>Przywrócenie zakupu wymaga tego samego konta sklepu. Zakup nie przenosi się automatycznie między Androidem a iOS. Postęp nie jest synchronizowany między urządzeniami.</p>
+</dialog>
+<dialog class="settings-dialog" id="ratingDialog" aria-labelledby="ratingTitle">
+  <div class="dialog-heading"><h2 id="ratingTitle">Oceń aplikację</h2></div>
+  <span class="purchase-spinner" id="ratingSpinner" aria-hidden="true" hidden></span>
+  <p id="ratingStatus" role="status"></p>
+  <div class="purchase-buttons"><button class="btn" id="ratingRetry" type="button" hidden>Spróbuj ponownie</button><button class="btn primary" id="ratingDone" type="button" autofocus>Gotowe</button></div>
 </dialog>
 <dialog class="settings-dialog" id="reviewAccessDialog" aria-labelledby="reviewAccessTitle">
   <div class="dialog-heading"><h2 id="reviewAccessTitle">Dostęp kodem</h2><button class="iconbtn" id="reviewAccessClose" type="button" aria-label="Zamknij dostęp kodem">×</button></div>

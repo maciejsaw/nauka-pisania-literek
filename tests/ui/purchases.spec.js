@@ -26,7 +26,7 @@ for (const platform of ['ios', 'android']) {
     await expect(page.locator('#parentGateDialog')).toBeHidden();
     await expect(page.locator('#parentAnswer')).toHaveValue('');
     await expect(page.locator('#purchaseProgress')).toBeVisible();
-    await expect(page.locator('.purchase-spinner')).toBeInViewport();
+    await expect(page.locator('#purchaseProgress .purchase-spinner')).toBeInViewport();
     await expect(page.locator('#buyBtn')).toBeDisabled();
     await expect(page.locator('#paywallDialog')).toHaveAttribute('aria-busy', 'true');
     // Foreground event from the payment sheet must not replace pending purchase data.

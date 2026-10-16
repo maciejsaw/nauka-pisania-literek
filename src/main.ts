@@ -8,6 +8,7 @@ import '@fontsource/atkinson-hyperlegible/latin-700.css';
 import '@fontsource/atkinson-hyperlegible/latin-ext-700.css';
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
+import { AppLauncher } from '@capacitor/app-launcher';
 import './styles.css';
 import './paywall.css';
 import { initStorage } from './storage.js';
@@ -15,6 +16,7 @@ import { initGame } from './game.js';
 import { initTouchFeedback } from './touch-feedback.js';
 import { isAdultYear } from './parent-gate.js';
 import { paywallPrice } from './paywall-price.js';
+import { openStoreRating } from './store-rating.js';
 import { access, reviewAccess, storeCodes, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
 
 initTouchFeedback();
@@ -181,6 +183,42 @@ $('purchaseContinue').addEventListener('click', () => {
 $('fullVersionBtn').addEventListener('click', requestPaywall);
 $('privacyBtn').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').showModal());
 $('privacyClose').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').close());
+const ratingDialog = $<HTMLDialogElement>('ratingDialog');
+const rateAppBtn = $<HTMLButtonElement>('rateAppBtn');
+const ratingRetry = $<HTMLButtonElement>('ratingRetry');
+let ratingBusy = false;
+rateAppBtn.hidden = !native;
+async function rateApp() {
+  if (!native || ratingBusy) return;
+  ratingBusy = true;
+  rateAppBtn.disabled = true;
+  ratingRetry.hidden = true;
+  $('ratingTitle').textContent = 'Oceń aplikację';
+  $('ratingStatus').textContent = `Otwieramy ${storeName}…`;
+  $('ratingSpinner').hidden = false;
+  if (!ratingDialog.open) ratingDialog.showModal();
+  try {
+    const result = await openStoreRating({ platform: Capacitor.getPlatform(), channel: __RELEASE_CHANNEL__, launcher: AppLauncher });
+    if (!ratingDialog.open) return;
+    if (result === 'beta') {
+      $('ratingTitle').textContent = 'Dziękujemy za testowanie!';
+      $('ratingStatus').textContent = 'To wersja testowa. Publiczną ocenę w sklepie będzie można dodać po premierze Pajączka.';
+    } else ratingDialog.close();
+  } catch {
+    if (ratingDialog.open) {
+      $('ratingStatus').textContent = `Nie udało się otworzyć ${storeName}. Sprawdź połączenie z internetem i spróbuj ponownie.`;
+      ratingRetry.hidden = false;
+    }
+  } finally {
+    ratingBusy = false;
+    rateAppBtn.disabled = false;
+    $('ratingSpinner').hidden = true;
+  }
+}
+rateAppBtn.addEventListener('click', () => askParent(rateApp, 'Dodanie oceny w sklepie jest dla rodzica lub opiekuna. Wpisz swój rok urodzenia, aby przejść dalej.'));
+ratingRetry.addEventListener('click', () => void rateApp());
+$('ratingDone').addEventListener('click', () => ratingDialog.close());
+ratingDialog.addEventListener('close', () => rateAppBtn.focus({ preventScroll: true }));
 access.addEventListener('change', () => {
   renderFullVersionButton();
   if (access.full && paywall.open) success();

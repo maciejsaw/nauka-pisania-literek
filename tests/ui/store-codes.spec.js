@@ -1,32 +1,8 @@
 import { test, expect } from './fixtures.js';
 test.use({ hasTouch: true });
 
-async function device(page, platform, paid = false) {
-  await page.addInitScript(({ platform, paid }) => {
-    if (platform === 'android') window.androidBridge = {};
-    else window.webkit = { messageHandlers: { bridge: {} } };
-    window.storeTest = { paid, urls: [], listeners: {}, failOpen: false, offline: false };
-    const definitions = { Preferences: ['get', 'set', 'remove'], App: ['addListener', 'removeListener'],
-      AppLauncher: ['openUrl'], Purchases: ['configure', 'addCustomerInfoUpdateListener', 'getCustomerInfo', 'getProducts', 'syncPurchases', 'invalidateCustomerInfoCache'] };
-    window.Capacitor = {
-      PluginHeaders: Object.entries(definitions).map(([name, methods]) => ({ name, methods: methods.map(name => ({ name, rtype: name === 'addListener' || name === 'addCustomerInfoUpdateListener' ? 'callback' : 'promise' })) })),
-      nativeCallback: (plugin, method, args, callback) => {
-        if (plugin === 'App') (window.storeTest.listeners[args.eventName] ||= []).push(callback);
-        return 'test-listener';
-      },
-      nativePromise: async (plugin, method, args) => {
-        if (plugin === 'Preferences') return { value: null };
-        if (plugin === 'AppLauncher') { window.storeTest.urls.push(args.url); return { completed: !window.storeTest.failOpen }; }
-        if (plugin === 'Purchases') {
-          if (method === 'syncPurchases' && window.storeTest.offline) throw new Error('offline');
-          if (method === 'getCustomerInfo') return { customerInfo: { entitlements: { active: window.storeTest.paid ? { full_version: { isActive: true, productIdentifier: 'full_version' } } : {} } } };
-          if (method === 'getProducts') return { products: [] };
-        }
-        return {};
-      },
-    };
-  }, { platform, paid });
-}
+import { storeDevice as device } from './store-device.js';
+
 async function openCodes(page) {
   await page.locator('#settingsBtn').tap();
   await page.getByRole('button', { name: 'Aktywuj kodem', exact: true }).tap();

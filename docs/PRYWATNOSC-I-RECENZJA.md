@@ -38,3 +38,11 @@ Kliknięcie kłódki pokazuje ofertę. Dopiero „Kup pełną wersję” urucham
 Przy cenie w PLN aplikacja używa aktualnej wartości ze sklepu. Przy metadanych w innej walucie pokazuje wyraźnie opisaną cenę odniesienia „4,99 zł w polskim sklepie” i informuje, że cenę dla konta potwierdzi sklep. To nie jest przeliczenie waluty ani gwarancja ceny dla zagranicznego konta. [RevenueCat opisuje rozbieżność USD/PLN w TestFlight](https://www.revenuecat.com/docs/test-and-launch/sandbox/apple-app-store). Gdy zmieni się polska cena produktu, zaktualizuj również cenę odniesienia w `src/paywall-price.js` i wersji WWW.
 
 Testy obejmują opóźnione potwierdzenie, anulowanie, błąd połączenia, przywrócenie, ponowne uruchomienie, spóźnioną odpowiedź po zamknięciu okna, cofnięcie dostępu oraz bezpieczne odstępy na iPhonie. Sklepy są w nich symulowane. Przed produkcją właściciel musi potwierdzić cały zakup na prawdziwych urządzeniach; `sandboxPurchasesVerified` pozostaje `false`.
+
+## Dobrowolna ocena aplikacji (beta.7)
+
+Przycisk z gwiazdką **Ustawienia → Oceń aplikację** jest dostępny w wersjach mobilnych. Najpierw otwiera tę samą bramkę rodzica co zakup. Nie pojawiają się automatyczne prośby po uruchomieniu, ćwiczeniu, odznace ani przybiciu piątki. Ocena nie daje nagród ani dostępu do płatnych liter; aplikacja nie sprawdza, czy rodzic wystawił ocenę.
+
+Po przejściu bramki wersja produkcyjna otwiera formularz recenzji App Store albo kartę aplikacji w Google Play. To świadomy wybór: [Apple](https://developer.apple.com/documentation/StoreKit/requesting-app-store-reviews) i [Google](https://developer.android.com/guide/playcore/in-app-review) zalecają link do sklepu dla ręcznego przycisku, ponieważ systemowy prompt może się w ogóle nie wyświetlić przez limity sklepu. Błąd otwierania sklepu pokazuje możliwość ponowienia.
+
+Buildy beta pokazują krótkie podziękowanie i informację o ocenach po premierze, bez odsyłania do nieopublikowanej karty. Kanał jest wyliczany z tego samego `RELEASE_TAG`, który numeruje wydanie; dopiero tag produkcyjny włącza linki do ocen. Lokalny zwykły build zachowuje się jak beta. Testy E2E bez taga sprawdzają ścieżkę produkcyjną, a z `RELEASE_TAG=v1.0.0-beta.7` ścieżkę beta; żaden z nich nie wysyła prawdziwej oceny.
