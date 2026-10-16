@@ -168,28 +168,29 @@ function bigSpiderSVG() {
 
 /* ---------- menu: pary liter (wielka + mała) ---------- */
 function polyD(pts) { return 'M' + pts.map((p) => p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('L'); }
-function letterSheetSVG(ch) {
-  const vbW = 240, top = 50, H = 370, L = BUILT[ch], dx = (vbW - L.width) / 2;
+function letterSheetSVG(ch, vbW = 240) {
+  const top = 50, H = 370;
+  const letter = letterPaths(ch, 1, (vbW - BUILT[ch].width) / 2, top, C.ink, 11);
   let lines = '';
   [[0, C['line-top'], 1.5], [100, C['line-mid'], 2.5], [200, C['line-base'], 2.5], [300, C['line-top'], 1.5]].forEach(([y, c, w]) => {
     lines += `<line x1="-10" x2="${vbW + 10}" y1="${y + top}" y2="${y + top}" stroke="${c}" stroke-width="${w}"/>`;
   });
-  return `<svg class="sheet" viewBox="0 0 ${vbW} ${H}" style="aspect-ratio:${vbW}/${H}" preserveAspectRatio="none" aria-hidden="true">${lines}${letterPaths(ch, 1, dx, top, C.ink, 11)}</svg>`;
+  return `<svg class="sheet" viewBox="0 0 ${vbW} ${H}" style="aspect-ratio:${vbW}/${H}" preserveAspectRatio="none" aria-hidden="true">${lines}${letter}</svg>`;
 }
-function tileHTML(ch) {
+function tileHTML(ch, single = false) {
   const locked = !access.canPlay(ch);
   const p = store.badges[ch] ? 1 : Math.min(1, (store.prog[ch] || 0) / LEVELS.length);
   const what = isDigit(ch) ? 'cyferka' : (ch === ch.toLowerCase() ? 'mała literka' : 'wielka literka');
-  return `<button type="button" class="tile${locked ? ' locked' : ''}" id="tile-${ORDER.indexOf(ch)}" data-ch="${ch}" aria-label="${what} ${ch}${locked ? ', pełna wersja' : ''}${store.badges[ch] ? ', zdobyta odznaka' : ''}">
+  return `<button type="button" class="tile${single ? ' single' : ''}${locked ? ' locked' : ''}" id="tile-${ORDER.indexOf(ch)}" data-ch="${ch}" aria-label="${what} ${ch}${locked ? ', pełna wersja' : ''}${store.badges[ch] ? ', zdobyta odznaka' : ''}">
     <span class="lbl" aria-hidden="true">${ch}</span>${store.badges[ch] ? `<span class="med">${icon('badge')}</span>` : ''}
-    ${locked ? '<span class="tile-lock" aria-hidden="true">' + icon('lock') + '</span>' : ''}${letterSheetSVG(ch)}<span class="prog"><i style="width:${Math.round(p * 100)}%"></i></span></button>`;
+    ${locked ? '<span class="tile-lock" aria-hidden="true">' + icon('lock') + '</span>' : ''}${letterSheetSVG(ch, single ? 480 : 240)}<span class="prog"><i style="width:${Math.round(p * 100)}%"></i></span></button>`;
 }
 function renderMenu() {
   const page = document.getElementById('page');
   page.innerHTML = '<h2 class="sect" id="secLetters">Literki</h2>'
     + LOWER.map((ch) => `<div class="pair">${Object.hasOwn(LETTERS, ch.toUpperCase())
       ? tileHTML(ch.toUpperCase()) + tileHTML(ch)
-      : tileHTML(ch) + '<span class="tile-spacer" aria-hidden="true"></span>'}</div>`).join('')
+      : tileHTML(ch, true)}</div>`).join('')
     + '<h2 class="sect" id="secDigits">Cyferki</h2>'
     + [0, 1, 2, 3, 4].map((i) => `<div class="pair">${tileHTML(DIGITS[2 * i])}${tileHTML(DIGITS[2 * i + 1])}</div>`).join('');
   page.querySelectorAll('.tile').forEach((b) => b.addEventListener('click', () => { audio(); startLetter(b.dataset.ch, resumeLevel(b.dataset.ch)); }));

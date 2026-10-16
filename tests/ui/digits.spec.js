@@ -21,7 +21,7 @@ for (const digit of ['5', '6']) {
   });
 }
 
-test('ą and ę occupy the left half of a full-width group, including with old saved capitals', async ({ page }, testInfo) => {
+test('ą and ę are centered on full-width guidelines, including with old saved capitals', async ({ page }, testInfo) => {
   await page.addInitScript(() => localStorage.setItem('pajak-dwulinia-v3', JSON.stringify({ prog: { 'Ą': 5, 'Ę': 11 }, badges: { 'Ę': true } })));
   await page.goto('/');
   await expect(page.locator('.tile')).toHaveCount(72);
@@ -32,14 +32,30 @@ test('ą and ę occupy the left half of a full-width group, including with old s
       const tile = page.locator(`.tile[data-ch="${ch}"]`);
       const group = page.locator('.pair').filter({ has: tile });
       await expect(group.locator('button')).toHaveCount(1);
-      await expect(group.locator('.tile-spacer')).toHaveAttribute('aria-hidden', 'true');
-      const [outer, left, right, regular] = await Promise.all([
-        group.boundingBox(), tile.boundingBox(), group.locator('.tile-spacer').boundingBox(), page.locator('.pair').first().boundingBox(),
+      const [outer, button, regular] = await Promise.all([
+        group.boundingBox(), tile.boundingBox(), page.locator('.pair').first().boundingBox(),
       ]);
       expect(Math.abs(outer.width - regular.width)).toBeLessThan(1);
-      expect(Math.abs(left.x - outer.x)).toBeLessThan(1);
-      expect(Math.abs(left.width - outer.width / 2)).toBeLessThan(1);
-      expect(Math.abs(right.x - left.x - left.width)).toBeLessThan(1);
+      expect(Math.abs(button.x - outer.x)).toBeLessThan(1);
+      expect(Math.abs(button.width - outer.width)).toBeLessThan(1);
+      const sheet = tile.locator('svg.sheet');
+      const paper = await sheet.boundingBox();
+      const standardSheet = page.locator('.pair').first().locator('svg.sheet').first();
+      const standardPaper = await standardSheet.boundingBox();
+      expect(Math.abs(paper.width - outer.width)).toBeLessThan(1);
+      expect(Math.abs(paper.height - standardPaper.height)).toBeLessThan(1);
+      const letterBounds = await sheet.locator('path').evaluateAll(paths => {
+        const bounds = paths.map(path => path.getBoundingClientRect());
+        return { left: Math.min(...bounds.map(b => b.left)), right: Math.max(...bounds.map(b => b.right)) };
+      });
+      expect(Math.abs((letterBounds.left + letterBounds.right) / 2 - outer.x - outer.width / 2)).toBeLessThan(1);
+      await expect(sheet.locator('line')).toHaveCount(4);
+      for (let line = 0; line < 4; line++) {
+        const a = standardSheet.locator('line').nth(line), b = sheet.locator('line').nth(line);
+        for (const attribute of ['y1', 'y2', 'stroke', 'stroke-width']) {
+          await expect(b).toHaveAttribute(attribute, await a.getAttribute(attribute));
+        }
+      }
     }
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
