@@ -1302,6 +1302,7 @@ $('hifive').addEventListener('click', () => {
 
 /* ---------- przyciski ---------- */
 function toMenu() { G = null; cancelAnimationFrame(raf); gameEl.hidden = true; resultEl.hidden = true; rewardEl.hidden = true; menuEl.hidden = false; renderMenu(); }
+$('purchaseSpider').innerHTML = bigSpiderSVG();
 $('settingsBtn').innerHTML = icon('settings');
 $('closeSettingsBtn').innerHTML = icon('close');
 for (const [id, symbol] of [['fullVersionBtn', 'unlock'], ['redeemCodeBtn', 'unlock'], ['parentInfoBtn', 'info'], ['privacyBtn', 'privacy'], ['reviewAccessBtn', 'unlock']]) {

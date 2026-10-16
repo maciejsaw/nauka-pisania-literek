@@ -30,3 +30,11 @@ Bramka rodzica prosi o czterocyfrowy rok urodzenia osoby dorosłej. Sprawdzenie 
 - https://support.google.com/googleplay/android-developer/answer/10787469
 - https://support.google.com/googleplay/android-developer/answer/14151465
 - https://support.google.com/googleplay/android-developer/answer/15748846
+
+## Zakupy po poprawkach UX (beta.6)
+
+Kliknięcie kłódki pokazuje ofertę. Dopiero „Kup pełną wersję” uruchamia weryfikację rodzica z rokiem urodzenia, potem spinner i systemowy ekran płatności. To kolejność wybrana przez właściciela. Po potwierdzeniu aplikacja odblokowuje ćwiczenia i pokazuje podziękowanie z Pajączkiem oraz przyciskiem „Gotowe”. Anulowanie przywraca ofertę; oczekująca płatność nie odblokowuje ćwiczeń bez potwierdzonego uprawnienia.
+
+Przy cenie w PLN aplikacja używa aktualnej wartości ze sklepu. Przy metadanych w innej walucie pokazuje wyraźnie opisaną cenę odniesienia „4,99 zł w polskim sklepie” i informuje, że cenę dla konta potwierdzi sklep. To nie jest przeliczenie waluty ani gwarancja ceny dla zagranicznego konta. [RevenueCat opisuje rozbieżność USD/PLN w TestFlight](https://www.revenuecat.com/docs/test-and-launch/sandbox/apple-app-store). Gdy zmieni się polska cena produktu, zaktualizuj również cenę odniesienia w `src/paywall-price.js` i wersji WWW.
+
+Testy obejmują opóźnione potwierdzenie, anulowanie, błąd połączenia, przywrócenie, ponowne uruchomienie, spóźnioną odpowiedź po zamknięciu okna, cofnięcie dostępu oraz bezpieczne odstępy na iPhonie. Sklepy są w nich symulowane. Przed produkcją właściciel musi potwierdzić cały zakup na prawdziwych urządzeniach; `sandboxPurchasesVerified` pozostaje `false`.

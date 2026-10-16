@@ -10,10 +10,11 @@ test('seven free pairs, locks, friendly paywall, no fake web payment', async ({ 
     await page.locator('#backBtn').click();
   }
   await page.getByRole('button', { name: 'wielka literka Ę, pełna wersja', exact: true }).click();
-  await expect(page.getByRole('dialog', { name: 'Jeszcze więcej literek z Pajączkiem' })).toBeVisible();
-  await expect(page.locator('#paywallCopy')).toContainText('Leona');
-  await expect(page.locator('#purchasePrice')).toContainText('5 zł');
-  await expect(page.locator('#purchaseTerms')).toContainText('Pierwsze 7 par');
+  await expect(page.getByRole('dialog', { name: 'Wszystkie literki i cyferki' })).toBeVisible();
+  await expect(page.locator('#paywallCopy')).toContainText('Leon');
+  await expect(page.locator('#purchasePrice')).toContainText('4,99 zł');
+  await expect(page.locator('.purchase-benefits li')).toHaveCount(3);
+  await expect(page.locator('#parentGateDialog')).toBeHidden();
   await expect(page.locator('#buyBtn')).toBeHidden();
   await page.getByRole('button', { name: 'Zamknij pełną wersję' }).click();
   await page.getByRole('button', { name: 'mała literka a', exact: true }).click();

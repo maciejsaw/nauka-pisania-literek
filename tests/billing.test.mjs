@@ -59,3 +59,38 @@ test('no product and unconfigured SDK never start a transaction', async () => {
   assert.equal(await billing.loadProduct(), undefined);
   await assert.rejects(() => billing.purchase());
 });
+test('a refresh started before purchase cannot relock paid exercises', async () => {
+  const { sdk, access, billing } = fixture();
+  await billing.initialize({}); await billing.loadProduct();
+  let finishRefresh;
+  sdk.getCustomerInfo = () => new Promise(resolve => { finishRefresh = resolve; });
+  const refresh = billing.refresh();
+  await billing.purchase();
+  finishRefresh({ customerInfo: free }); await refresh;
+  assert.equal(access.paid, true);
+  // Older cache notifications are ignored, but a newer refund still revokes.
+  sdk.listener({ ...paid, requestDate: '2026-10-16T12:00:00Z' });
+  sdk.listener({ ...free, requestDate: '2026-10-16T11:59:00Z' });
+  assert.equal(access.paid, true);
+  sdk.listener({ ...free, requestDate: '2026-10-16T12:01:00Z' });
+  assert.equal(access.paid, false);
+});
+test('successful transaction fetches fresh confirmation if entitlement arrives late', async () => {
+  const { sdk, access, billing } = fixture();
+  await billing.initialize({}); await billing.loadProduct();
+  sdk.purchaseStoreProduct = async () => ({ customerInfo: free });
+  let invalidated = false;
+  sdk.invalidateCustomerInfoCache = async () => { invalidated = true; };
+  sdk.getCustomerInfo = async () => ({ customerInfo: invalidated ? paid : free });
+  assert.equal(await billing.purchase(), true);
+  assert.equal(invalidated, true); assert.equal(access.paid, true);
+});
+test('unconfirmed payment stays locked until a real entitlement update', async () => {
+  const { sdk, access, billing } = fixture();
+  await billing.initialize({}); await billing.loadProduct();
+  sdk.purchaseStoreProduct = async () => ({ customerInfo: free });
+  sdk.invalidateCustomerInfoCache = async () => {};
+  assert.equal(await billing.purchase(), false);
+  assert.equal(access.paid, false); assert.equal(billing.busy, false);
+  sdk.listener(paid); assert.equal(access.paid, true);
+});

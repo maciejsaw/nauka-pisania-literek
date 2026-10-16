@@ -14,6 +14,7 @@ import { initStorage } from './storage.js';
 import { initGame } from './game.js';
 import { initTouchFeedback } from './touch-feedback.js';
 import { isAdultYear } from './parent-gate.js';
+import { paywallPrice } from './paywall-price.js';
 import { access, reviewAccess, storeCodes, initPurchases, native, isConfigured, loadProduct, purchase, restore, purchaseError } from './purchases';
 
 initTouchFeedback();
@@ -27,58 +28,95 @@ const status = $('purchaseStatus');
 let parentAction: (() => Promise<void>) | undefined;
 let session = 0;
 let busy = false;
-function setBusy(value: boolean) {
+let loadingTimer: ReturnType<typeof setTimeout> | undefined;
+const storeName = Capacitor.getPlatform() === 'ios' ? 'App Store' : 'Google Play';
+function setBusy(value: boolean, message = '') {
   busy = value;
+  clearTimeout(loadingTimer);
   buy.disabled = value || !buy.dataset.ready;
   restoreBtn.disabled = value || !isConfigured();
   $('paywallClose').toggleAttribute('disabled', value);
   paywall.setAttribute('aria-busy', String(value));
+  $('purchaseProgress').hidden = !value;
+  $('purchaseProgressText').textContent = message;
+  $('purchaseProgressHint').textContent = 'To może chwilę potrwać. Prosimy o cierpliwość.';
+  if (value) {
+    $('purchaseOffer').hidden = true;
+    $('purchaseProgress').scrollIntoView({ block: 'nearest' });
+    loadingTimer = setTimeout(() => {
+      $('purchaseProgressHint').textContent = 'Sklep nadal odpowiada. Jeśli wyświetliło się okno płatności, dokończ ją lub anuluj w tym oknie.';
+    }, 12000);
+  }
+}
+function renderFullVersionButton() {
+  $('fullVersionLabel').textContent = access.full ? 'Pełna wersja odblokowana' : 'Odblokuj wszystkie literki';
 }
 function success() {
-  $('paywallTitle').textContent = access.paid ? 'Dziękujemy za wsparcie!' : 'Dostęp kodem jest aktywny';
-  $('paywallCopy').textContent = access.paid ? 'Wszystkie literki i cyferki są już dostępne. Autor i Leon dziękują — miłego pisania z Pajączkiem!' : 'Wszystkie ćwiczenia są dostępne bez płatności. Dostęp kodem możesz wyłączyć w ustawieniach, aby wrócić do siedmiu darmowych par.';
-  $('purchasePrice').textContent = 'Pełna wersja odblokowana';
+  if (!paywall.open) return;
+  if (parentGate.open) parentGate.close();
+  setBusy(false);
+  paywall.dataset.state = 'success';
+  $('paywallTitle').textContent = access.paid ? 'Dziękujemy za zakup!' : 'Pełna wersja odblokowana!';
+  $('purchaseOffer').hidden = true;
+  $('purchaseSuccess').hidden = false;
+  $('purchaseSuccessCopy').textContent = access.paid
+    ? 'Wszystkie literki i cyferki są już dostępne. Autor Maciej i jego syn Leon dziękują za wsparcie!'
+    : 'Kod odblokował wszystkie literki i cyferki. Miłego pisania z Pajączkiem!';
   buy.hidden = true; restoreBtn.hidden = true;
+  $('purchaseRetry').hidden = true;
   status.textContent = '';
+  $('purchaseContinue').focus({ preventScroll: true });
+  $('purchaseSuccess').scrollIntoView({ block: 'nearest' });
 }
-async function openPaywall(ch?: string) {
+async function openPaywall() {
   const current = ++session;
-  $('paywallTitle').textContent = ch ? `Jeszcze więcej literek z Pajączkiem` : 'Pełna wersja z Pajączkiem';
-  $('paywallCopy').textContent = 'Ta aplikacja powstała z myślą o moim synku Leonie. Dopracowywaliśmy ją wspólnie podczas wielu prób i ćwiczeń. Za niewielką, jednorazową kwotę odblokujesz wszystkie literki i cyferki, a przy okazji wesprzesz autora i Leona. Dziękujemy!';
-  $('purchasePrice').textContent = native ? 'Pobieramy cenę ze sklepu…' : 'Planowana cena pełnej aplikacji: 5 zł';
-  $('purchaseTerms').textContent = 'Pierwsze 7 par jest bezpłatne. Pełna wersja to jeden zakup — bez abonamentu i reklam.';
-  buy.textContent = 'Odblokuj pełną wersję';
-  buy.hidden = false; restoreBtn.hidden = !native;
+  paywall.dataset.state = 'offer';
+  $('paywallTitle').textContent = 'Wszystkie literki i cyferki';
+  $('paywallCopy').textContent = 'Autor Maciej i jego syn Leon dopracowali Pajączka podczas wielu wspólnych ćwiczeń — kupując pełną wersję, wspierasz ich pracę.';
+  $('purchasePrice').textContent = native ? 'Pobieramy cenę…' : '4,99 zł w polskim sklepie';
+  $('purchaseTerms').textContent = '';
+  $('purchaseOffer').hidden = false;
+  $('purchaseSuccess').hidden = true;
+  $('purchaseRetry').hidden = true;
+  buy.textContent = 'Kup pełną wersję';
+  buy.hidden = !native; restoreBtn.hidden = !native;
+  restoreBtn.textContent = 'Przywróć zakup';
   delete buy.dataset.ready;
   setBusy(false);
   status.textContent = '';
   if (!paywall.open) paywall.showModal();
   if (access.full) { success(); return; }
   if (!native) {
-    status.textContent = 'To wersja demonstracyjna w przeglądarce. Zakup będzie dostępny w aplikacji na Androida i iOS po jej premierze w sklepach.';
-    buy.hidden = true;
+    status.textContent = 'To pokazowa wersja w przeglądarce. Zakup jest dostępny tylko w aplikacji na iPhone’a, iPada lub Androida.';
     return;
   }
   try {
-    // Wait for SDK initialization, even if the user opens a locked tile immediately at launch.
     await purchaseReady;
     const product = await loadProduct();
     if (current !== session || !paywall.open) return;
     if (access.full) { success(); return; }
     if (!product) throw new Error('unavailable');
-    $('purchasePrice').textContent = `Tylko ${product.priceString} — jednorazowo`;
-    buy.textContent = `Kup pełną wersję za ${product.priceString}`;
+    const price = paywallPrice(product, storeName);
+    $('purchasePrice').textContent = price.price;
+    $('purchaseTerms').textContent = price.note;
+    buy.textContent = 'Kup pełną wersję';
     buy.dataset.ready = 'true'; setBusy(false);
   } catch {
-    if (current !== session) return;
-    $('purchasePrice').textContent = 'Cena jest chwilowo niedostępna';
-    status.textContent = 'Nie można teraz pobrać oferty ze sklepu. Sprawdź połączenie i otwórz to okno ponownie. Darmowe literki nadal działają.';
+    if (current !== session || !paywall.open) return;
+    if (access.full) { success(); return; }
+    $('purchasePrice').textContent = 'Nie udało się pobrać ceny';
+    status.textContent = 'Sprawdź połączenie z internetem i spróbuj ponownie. Bezpłatne literki nadal działają.';
+    $('purchaseRetry').hidden = false;
     setBusy(false);
   }
 }
-function askParent(action: () => Promise<void>) {
+function requestPaywall() {
+  void openPaywall();
+}
+function askParent(action: () => Promise<void>, reason = 'Ten krok jest dla rodzica lub opiekuna. Prosimy o krótką weryfikację przed przejściem dalej.') {
   if (parentGate.open) return;
   parentAction = action;
+  $('parentReason').textContent = reason;
   $<HTMLInputElement>('parentAnswer').value = '';
   $('parentError').textContent = '';
   parentGate.showModal();
@@ -102,26 +140,52 @@ parentGate.addEventListener('close', () => {
 $('paywallClose').addEventListener('click', () => paywall.close());
 paywall.addEventListener('cancel', event => { if (busy) event.preventDefault(); });
 paywall.addEventListener('close', () => { session++; });
-buy.addEventListener('click', () => askParent(async () => {
-  setBusy(true); status.textContent = 'Otwieramy bezpieczną płatność w sklepie…';
+async function transact(kind: 'purchase' | 'restore') {
+  if (busy || access.full) return;
+  paywall.dataset.state = 'waiting';
+  setBusy(true, kind === 'purchase' ? 'Otwieramy płatność. Prosimy czekać…' : 'Sprawdzamy Twój zakup…');
+  status.textContent = '';
   try {
-    if (await purchase()) success();
-    else status.textContent = 'Czekamy na potwierdzenie zakupu. Jeśli płatność się zakończyła, wybierz „Przywróć zakup”.';
-  } catch (e) { status.textContent = purchaseError(e); }
-  finally { setBusy(false); }
-}));
-restoreBtn.addEventListener('click', () => askParent(async () => {
-  setBusy(true); status.textContent = 'Sprawdzamy wcześniejszy zakup…';
-  try {
-    if (await restore()) success();
-    else status.textContent = 'Nie znaleźliśmy zakupu na tym koncie sklepu. Sprawdź, czy używasz konta Apple lub Google, na którym kupiono pełną wersję.';
-  } catch (e) { status.textContent = purchaseError(e); }
-  finally { setBusy(false); }
-}));
-$('fullVersionBtn').addEventListener('click', () => void openPaywall());
+    const unlocked = await (kind === 'purchase' ? purchase() : restore());
+    if (unlocked || access.full) success();
+    else {
+      paywall.dataset.state = 'pending';
+      $('paywallTitle').textContent = kind === 'purchase' ? 'Czekamy na potwierdzenie zakupu' : 'Nie znaleźliśmy zakupu';
+      status.textContent = kind === 'purchase'
+        ? 'Jeśli płatność się zakończyła, nie kupuj ponownie. Wybierz „Sprawdź zakup”. Literki odblokują się po potwierdzeniu ze sklepu.'
+        : 'Użyj tego samego konta Apple lub Google, na którym kupiono pełną wersję, i spróbuj ponownie.';
+      buy.hidden = true;
+      restoreBtn.textContent = 'Sprawdź zakup';
+    }
+  } catch (e) {
+    if (access.full) success();
+    else {
+      const pending = String((e as { code?: unknown })?.code) === '20';
+      paywall.dataset.state = pending ? 'pending' : 'offer';
+      $('paywallTitle').textContent = pending ? 'Zakup czeka na zatwierdzenie' : 'Wszystkie literki i cyferki';
+      $('purchaseOffer').hidden = pending;
+      buy.hidden = pending;
+      restoreBtn.textContent = pending ? 'Sprawdź zakup' : 'Przywróć zakup';
+      status.textContent = purchaseError(e);
+    }
+  } finally { setBusy(false); }
+}
+buy.addEventListener('click', () => askParent(() => transact('purchase'), 'Przed zakupem chcemy upewnić się, że telefon trzyma rodzic lub opiekun. Wpisz swój rok urodzenia, aby przejść do płatności.'));
+restoreBtn.addEventListener('click', () => askParent(() => transact('restore'), 'Przed sprawdzeniem wcześniejszego zakupu prosimy o potwierdzenie, że telefon trzyma rodzic lub opiekun.'));
+$('purchaseRetry').addEventListener('click', () => void openPaywall());
+$('purchaseContinue').addEventListener('click', () => {
+  paywall.close();
+  $<HTMLDialogElement>('settingsDialog').close();
+  $('settingsBtn').focus({ preventScroll: true });
+});
+$('fullVersionBtn').addEventListener('click', requestPaywall);
 $('privacyBtn').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').showModal());
 $('privacyClose').addEventListener('click', () => $<HTMLDialogElement>('privacyDialog').close());
-access.addEventListener('change', () => { if (access.full && paywall.open) success(); });
+access.addEventListener('change', () => {
+  renderFullVersionButton();
+  if (access.full && paywall.open) success();
+  else if (!access.full && paywall.open && paywall.dataset.state === 'success') paywall.close();
+});
 const reviewDialog = $<HTMLDialogElement>('reviewAccessDialog');
 const reviewStatus = $('reviewAccessStatus');
 const reviewForm = $<HTMLFormElement>('reviewAccessForm');
@@ -166,7 +230,7 @@ const codeSubmit = $<HTMLButtonElement>('storeCodeSubmit');
 const codeCheck = $<HTMLButtonElement>('storeCodeCheck');
 const codeStatus = $('storeCodeStatus');
 const codeStore = Capacitor.getPlatform() === 'ios' ? 'App Store' : 'Google Play';
-$('storeCodeCopy').textContent = `Masz kod od autora? Wpisz kod przeznaczony dla ${codeStore}. Otworzymy sklep, gdzie potwierdzisz bezpłatne odblokowanie wszystkich literek. Użyj tego samego konta co w aplikacji.`;
+$('storeCodeCopy').textContent = `Masz kod od autora aplikacji, Macieja? Wpisz kod przeznaczony dla ${codeStore}. Otworzymy sklep, gdzie potwierdzisz bezpłatne odblokowanie wszystkich literek. Użyj konta sklepu zalogowanego na tym urządzeniu.`;
 codeSubmit.textContent = `Aktywuj w ${codeStore}`;
 function renderStoreCodes() {
   $('redeemCodeBtn').hidden = !native || access.full;
@@ -215,12 +279,14 @@ codeCheck.addEventListener('click', () => void checkStoreCode());
 $('storeCodeClose').addEventListener('click', () => codeDialog.close());
 codeDialog.addEventListener('close', () => { codeInput.value = ''; });
 if (native) void App.addListener('appStateChange', ({ isActive }) => {
+  if (isActive && busy) $('purchaseProgressText').textContent = 'Czekamy na potwierdzenie sklepu…';
   if (isActive && storeCodes.pending) void checkStoreCode();
 });
 const purchaseReady = initPurchases().catch(() => { /* Free letters always remain usable. */ });
 await reviewAccess.initialize();
 await initStorage();
-initGame(access, (ch: string) => void openPaywall(ch));
+initGame(access, requestPaywall);
+renderFullVersionButton();
 
 if (Capacitor.getPlatform() === 'android') {
   void App.addListener('backButton', () => {

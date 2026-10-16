@@ -5,6 +5,24 @@
 .purchase-dialog .dialog-heading h2 { font-size: 25px; }
 .purchase-price { color: var(--ink); font-family: var(--display); font-size: 25px; font-weight: 800; margin-bottom: 8px; }
 .purchase-terms { color: var(--muted); font-size: 14px; }
+.purchase-terms:empty, .purchase-status:empty { display: none; }
+.purchase-benefits { padding-left: 22px; line-height: 1.5; margin: 16px 0; }
+.purchase-benefits li { padding-left: 3px; margin: 6px 0; }
+.purchase-benefits li::marker { color: var(--good); }
+.purchase-progress { text-align: center; padding: 24px 8px; }
+.purchase-progress strong { display: block; color: var(--ink); font-size: 21px; }
+.purchase-progress p { color: var(--muted); font-size: 16px; }
+.purchase-spinner { display: block; width: 44px; height: 44px; box-sizing: border-box; border: 4px solid var(--line-mid); border-top-color: var(--ink); border-radius: 50%; margin: 0 auto 20px; animation: purchase-spin .9s linear infinite; }
+@keyframes purchase-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .purchase-spinner { animation: none; } }
+.purchase-success { text-align: center; }
+.purchase-spider { width: 150px; height: 150px; margin: 0 auto; }
+.purchase-spider svg { width: 100%; height: 100%; }
+.purchase-spider .hand, .purchase-spider .calm { display: none; }
+.purchase-success .btn { width: 100%; justify-content: center; min-height: 58px; font-size: 22px; margin-top: 8px; }
+.purchase-dialog[data-state="success"] .purchase-buttons { display: none; }
+.purchase-dialog[data-state="waiting"] .purchase-buttons { opacity: .5; }
+#purchaseRetry { margin-top: 16px; }
 .purchase-buttons { display: grid; gap: 14px; margin-top: 20px; }
 .purchase-buttons .btn { justify-content: center; text-align: center; }
 .btn:disabled { opacity: .55; cursor: default; }
