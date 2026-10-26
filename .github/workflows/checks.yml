@@ -18,7 +18,9 @@ jobs:
         with: { node-version: '22', cache: npm }
       - run: npm ci
       - run: npm run typecheck && npm test && npm run check:metadata && npm run build
-      - run: npx playwright install --with-deps chromium webkit
+      - name: Install browser test dependencies
+        timeout-minutes: 10
+        run: bash scripts/ci-browser-deps.sh
       - run: npm run test:ui
       - uses: actions/upload-artifact@v4
         if: failure()
