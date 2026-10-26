@@ -2,7 +2,7 @@ import { test, expect } from './fixtures.js';
 import { billingDevice } from './billing-device.js';
 import { openExercise, writeLetter } from './handwriting.js';
 
-for (const digit of ['5', '6']) {
+for (const digit of ['5', '6', 's', 'ś']) {
   test(`${digit}: updated model can be traced and written independently`, async ({ page }, testInfo) => {
     await billingDevice(page, { paid: true });
     await openExercise(page, digit);
@@ -67,3 +67,19 @@ test('ą and ę are centered on full-width guidelines, including with old saved 
   await page.getByRole('button', { name: 'mała literka ę, pełna wersja', exact: true }).click();
   await expect(page.locator('#paywallDialog')).toBeVisible();
 });
+
+// An independently drawn six, deliberately not read from LETTERS. Its final
+// curve closes downward, with a slightly different contour from the model.
+const handwrittenSix = [{ d: 'M 87 6 C 26 6 6 55 6 132 C 6 171 24 194 50 194 C 78 194 95 170 95 138 C 95 107 76 82 52 82 C 26 82 6 103 6 132' }];
+
+for (const level of [0, 1, 4]) {
+  test(`6: a handwritten downward closure passes level ${level}`, async ({ page }) => {
+    await billingDevice(page, { paid: true });
+    await openExercise(page, '6', level);
+    await writeLetter(page, '6', { inputStrokes: handwrittenSix });
+    await page.clock.runFor(2600);
+    await expect(page.locator('#result')).toBeVisible();
+    await expect(page.locator('#nextBtn')).toBeVisible();
+    expect(parseInt(await page.locator('#resAcc').textContent(), 10)).toBeGreaterThan(75);
+  });
+}

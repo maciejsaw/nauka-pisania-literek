@@ -20,7 +20,7 @@ export async function openExercise(page, letter, level = 0) {
   await page.clock.runFor(32);
 }
 
-export async function writeLetter(page, letter, { scale = 1, race = false, tick = 20 } = {}) {
+export async function writeLetter(page, letter, { scale = 1, race = false, tick = 20, inputStrokes } = {}) {
   // Letter paths provide pointer input only. Completion, scoring, rendering and
   // saving run through the real app; no calls into its private game functions.
   const shape = buildLetter(LETTERS[letter]);
@@ -31,7 +31,7 @@ export async function writeLetter(page, letter, { scale = 1, race = false, tick 
     * (scale < 1 ? scale : 0.8);
   const ox = box.x + (width - shape.width * s) / 2;
   const oy = box.y + 10 + (height - band * s) / 2 - top * s;
-  for (const stroke of shape.strokes) {
+  for (const stroke of (inputStrokes ? buildLetter(inputStrokes) : shape).strokes) {
     const points = stroke.pts.filter((_, i) => i % 2 === 0 || i === stroke.pts.length - 1);
     await page.mouse.move(ox + points[0][0] * s, oy + points[0][1] * s);
     await page.mouse.down();

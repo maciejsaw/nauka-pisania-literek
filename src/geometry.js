@@ -53,6 +53,11 @@ function buildLetter(strokes) {
   });
   let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
   built.forEach((b) => b.pts.forEach(([x, y]) => { minX = Math.min(minX, x); maxX = Math.max(maxX, x); minY = Math.min(minY, y); maxY = Math.max(maxY, y); }));
+  // Keep the original horizontal frame when only a leading stroke is shortened.
+  // Otherwise centering the narrower shape also moves the unchanged letter body.
+  for (const stroke of strokes) {
+    if (Number.isFinite(stroke.layoutMinX)) minX = Math.min(minX, stroke.layoutMinX);
+  }
   built.forEach((b) => b.pts.forEach((p) => { p[0] -= minX; }));
   return { strokes: built, width: maxX - minX, minY, maxY };
 }
