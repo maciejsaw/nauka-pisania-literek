@@ -22,6 +22,8 @@ Kolejność dalszej pracy: testy beta.11 na obu platformach, ewentualne poprawki
 - **Dostępność App Store:** zgodnie z odpowiedzią właściciela zapisano tylko **Polskę**. Panel potwierdził `Availability (1 Country or Region)` i `Poland — Available on App Release`. Wyłączono automatyczne dodawanie przyszłych krajów. Google także pozostaje tylko w Polsce. Sama ta zmiana nie publikuje aplikacji.
 - Raport **Release readiness → production** (run `40324019739`) wykazał cztery braki: `storeListingsCompleted`, `sandboxPurchasesVerified`, `screenshotsReviewed`, `REVIEW_CONTACT_JSON`. Brak kontaktu usunięto po zgodzie właściciela; ponowny raport `40326138147` potwierdził już tylko trzy brakujące flagi. Nie zaznaczono ich bez wykonania zadań. Żadna produkcja nie została zgłoszona ani opublikowana.
 
+26 października skrócono notatki recenzentów w Apple (aplikacja i IAP) oraz Google (Sign in details): pozostały język aplikacji i instrukcje dostępu. Usunięto wyliczenia funkcji, darmowych liter i szczegóły techniczne. W Google zastąpiono nieaktualną instrukcję mnożenia rokiem urodzenia; prywatny kod pozostał bez zmian. Kopie w repo odpowiadają zapisom w sklepach.
+
 ## Co już działa
 
 - Repo: `maciejsaw/nauka-pisania-literek`; identyfikator obu aplikacji: `com.maciejsawicki.pajaczek`.

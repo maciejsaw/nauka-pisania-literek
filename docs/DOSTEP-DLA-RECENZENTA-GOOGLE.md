@@ -2,7 +2,7 @@
 
 Ten dokument dotyczy prywatnego kodu do oceny. Osobny przycisk **Aktywuj kodem**, dodany w beta.4, obsługuje [oficjalne kody promocyjne sklepów](KODY-PROMOCYJNE.md) dla znajomych i blogerów.
 
-Od Android build **1000003** recenzent może otworzyć **Ustawienia → Dostęp kodem**, rozwiązać bramkę rodzicielską i wpisać prywatny kod. Otrzymuje wszystkie 72 znaki i te same ćwiczenia co płacący użytkownik. Nie potrzebuje konta, płatności, internetu ani konkretnego kraju. Kod nie wygasa i można użyć go ponownie. Nie ma wykrywania recenzentów ani zmienionej wersji treści.
+Od Android build **1000003** recenzent może otworzyć **Ustawienia → Dostęp kodem**, przejść bramkę rodzicielską przez wpisanie roku urodzenia osoby dorosłej i wpisać prywatny kod. Otrzymuje wszystkie 72 znaki i te same ćwiczenia co płacący użytkownik. Nie potrzebuje konta, płatności, internetu ani konkretnego kraju. Kod nie wygasa i można użyć go ponownie. Nie ma wykrywania recenzentów ani zmienionej wersji treści.
 
 Przycisk jest dostępny na Androidzie. Wersje WWW i iOS go nie oferują. „Wyłącz dostęp kodem” przywraca zwykłe ograniczenia, chyba że użytkownik faktycznie kupił pełną wersję. Pozwala to sprawdzić również normalną ofertę zakupu. Dostęp kodem nie jest testem transakcji — przed testami Google Billing należy go wyłączyć.
 
@@ -10,12 +10,12 @@ Przycisk jest dostępny na Androidzie. Wersje WWW i iOS go nie oferują. „Wył
 
 App content → Sign in details → dostęp ograniczony → Add details:
 
-- Name: `Full access code — Android build 1000003 and later`.
+- Name: `Full access for review`.
 - Username: puste, aplikacja nie ma kont.
 - Password: zawartość prywatnego `secrets/google-review-code.txt`. Nie kopiuj do repo, issue ani logów.
 - Other information: instrukcja po angielsku poniżej.
 
-> No account or payment needed. From home open Settings (gear, "Ustawienia") > "Dostęp kodem". Solve the displayed multiplication (e.g. 12 x 6 = 72), tap "Dalej". Paste the password above into "Kod dostępu", then tap "Odblokuj kodem". All letters/digits unlock with the same exercises as paid users. Code is reusable, works offline, has no expiry or location limit. To inspect the normal paywall, return here and tap "Wyłącz dostęp kodem". Available in build 1000003 and later.
+> The app is in Polish; no account or payment is needed. Open Settings (gear) > “Dostęp kodem”. Enter an adult’s four-digit birth year and tap “Dalej”. Paste the password above into “Kod dostępu” and tap “Odblokuj kodem” to unlock all exercises. To test the purchase flow, disable this access with “Wyłącz dostęp kodem”.
 
 Zaznacz pełny dostęp po użyciu instrukcji i zapisz. Do oceny zgłoś build 1000003 lub nowszy, zawierający ten mechanizm. Właściciel zatwierdza przekazanie kodu Google; nie udostępniamy żadnych poświadczeń jego kont.
 
