@@ -106,9 +106,11 @@ Te dane są dla Apple App Review, nie do publicznego repo.
 
 Najpierw uruchom **Release readiness** z etapem `bootstrap`. Po zielonym raporcie: repo → Actions → **Release to stores** → Run workflow → branch main → `release_tag: v1.0.0-beta.1`.
 
-Uruchomienie ręczne **tylko buduje podpisane paczki**, bez wysyłania ich do sklepów. Nie wymaga jeszcze flag gotowości produkcyjnej. Po sukcesie pobierz artefakty `signed-android` (Pajaczek.aab) i `signed-ios` (Pajaczek.ipa).
+Pozostaw `publish=false`: takie uruchomienie ręczne **tylko buduje podpisane paczki**, bez wysyłania ich do sklepów. Nie wymaga jeszcze flag gotowości produkcyjnej. Po sukcesie pobierz artefakty `signed-android` (Pajaczek.aab) i `signed-ios` (Pajaczek.ipa).
 
-W Play Console utwórz pierwsze wydanie w Internal testing i wgraj AAB. Uzupełnij Play App Signing i wymagane podstawowe pola, następnie **uruchom pierwsze wydanie testowe**. Nie zostawiaj aplikacji wyłącznie jako szkicu: Play API może wtedy odrzucić automatyczne wydanie ze statusem completed. Jeśli konsola wymaga dodatkowych deklaracji, wykonaj już teraz odpowiednie punkty kroku 10. Ten pierwszy krok uruchamia możliwość późniejszych aktualizacji przez API. Nie wysyłaj tej samej paczki/tego samego numeru drugi raz.
+W Play Console utwórz pierwsze wydanie w Internal testing i wgraj AAB. Uzupełnij Play App Signing i wymagane podstawowe pola, następnie **uruchom pierwsze wydanie testowe**. Jeśli konsola wymaga dodatkowych deklaracji, wykonaj już teraz odpowiednie punkty kroku 10. Kolejne wydania wewnętrzne mogą już działać przez API, ale aplikacja nadal może mieć status szkicu przed pierwszą publikacją produkcyjną.
+
+**Pierwsza produkcja:** jeśli API zgłosi `Only releases with status draft may be created on draft app`, pobierz `signed-android` z tego samego przebiegu. W Play Console → Production → Create new release dodaj gotową paczkę (z biblioteki, jeśli już tam jest; w przeciwnym razie wgraj AAB), przejdź Preview and confirm i wyślij zmiany do oceny. Nie buduj ponownie ani nie zmieniaj numeru tylko z powodu tego błędu. Taką sytuację potwierdzono przy pierwszym wydaniu Pajączka 27 października 2026, mimo działających wcześniejszych bet.
 
 Na Apple pierwszą paczkę może już wysłać beta tag z kolejnego kroku; nie potrzebujesz aplikacji Transporter na swoim Macu.
 
