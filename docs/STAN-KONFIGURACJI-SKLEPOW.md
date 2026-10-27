@@ -1,6 +1,6 @@
 # Pajączek — stan konfiguracji sklepów
 
-Status przygotowań zaktualizowany 26 października 2026; starsze kontrole kont mają daty poniżej. To zapis wykonanych czynności, nie potwierdzenie gotowości do publicznej sprzedaży. Przy wznowieniu sprawdź stan paneli i nie generuj ponownie istniejących kluczy.
+Status przygotowań zaktualizowany 27 października 2026; starsze kontrole kont mają daty poniżej. To zapis wykonanych czynności, nie potwierdzenie gotowości do publicznej sprzedaży. Przy wznowieniu sprawdź stan paneli i nie generuj ponownie istniejących kluczy.
 
 ## Punkt startowy przy następnym podejściu
 
@@ -15,7 +15,7 @@ Kolejność dalszej pracy: testy beta.11 na obu platformach, ewentualne poprawki
 ## Kontrola sklepów i płatności 26 października
 
 - **Apple Business:** Paid Apps Agreement, rachunek i oba formularze podatkowe mają status **Active**. DSA nadal **In Review**. DAC7 ma **Active**: po jednoznacznym potwierdzeniu właściciela zapisano „Nie” na pytanie o usługi wykonywane przez ludzi na zamówienie we wszystkich aplikacjach konta.
-- **Google:** App content pokazuje brak zaległych deklaracji. Karta sklepowa jest kompletna, produkcja pozostaje nieaktywna; przed zgłoszeniem brakuje przygotowania wydania produkcyjnego. Nie uruchomiono dodatkowej ścieżki testowej. Właściciel sam dodał rachunek do wypłat; panel potwierdza **Verification pending**. Nie dodawać go ponownie. Panel pokazuje próg miesięcznej wypłaty 2 PLN. Dalszą weryfikację bankową wykonuje właściciel.
+- **Google:** App content pokazuje brak zaległych deklaracji. Karta sklepowa jest kompletna, produkcja pozostaje nieaktywna; przed zgłoszeniem brakuje przygotowania wydania produkcyjnego. Nie uruchomiono dodatkowej ścieżki testowej. Właściciel sam dodał rachunek do wypłat; panel potwierdza **Verification pending**. Nie dodawać go ponownie. Panel pokazywał próg miesięcznej wypłaty 2 PLN. **Aktualizacja 27 października: właściciel potwierdził zakończenie weryfikacji rachunku Google.** Nie sprawdzano ponownie panelu; nie jest to jeszcze potwierdzenie rzeczywistej wypłaty.
 - **Prawdziwy test Android:** utworzono i przypisano do kanału internal osobną listę `Pajaczek platne zakupy przed premiera` z trzema nowymi adresami wskazanymi przez właściciela. Adresy pozostają w Play Console, poza publicznym repo. W License testing wybrana jest nadal tylko wcześniejsza lista rodzinna, nowa lista nie jest zaznaczona. Zakup właściciel/tester wykonuje sam na telefonie; nie wykonano płatności ani zwrotu.
 - **RevenueCat:** oba sklepy mają **Valid credentials**. W sandboxie widoczne są po jednej transakcji App Store i Play Store z 16 października, `full_version`, 4,99 PLN, jednorazowo, aktywne uprawnienie bezterminowe. Produkcyjnych transakcji jeszcze brak. Powiadomienia Google są połączone; test Apple sandbox ponownie **SUCCESS**. Produkcja nadal zwraca 401, zgodnie z opisaną przez inżyniera Apple blokadą produkcyjnego API przed pierwszym wydaniem. Szczegóły i plan prawdziwej płatności w [notatkach o zakupach](PRYWATNOSC-I-RECENZJA.md#kontrola-revenuecat-i-prawdziwych-rozliczeń-26-października-2026).
 - **Apple IAP:** poprawiono i zapisano instrukcję recenzenta zgodną z aktualnym repo (72 znaki, siedem darmowych liter w dostępnych odmianach, rok urodzenia zamiast mnożenia). Zrzut oferty z rzeczywistego iPhone’a (`IMG_0884.jpg`, 1206 × 2622) dostarczony przez właściciela 26 października został wgrany i zapisany w Review Information → Screenshot. Apple zakończył przetwarzanie i pokazuje miniaturę; zakup nadal Prepare for Submission. Zapisano także aktualną instrukcję samej wersji aplikacji i pełny prywatny kontakt App Review; zatwierdzony numer z prefiksem kraju jest w Apple, lokalnym ignorowanym pliku i GitHub Secrets `REVIEW_CONTACT_JSON`. W szkicu pierwszej wersji zapisano build **100.0.11** w miejsce starego 100.0.3. Nie kliknięto Add for Review ani nie wysłano zgłoszenia.
@@ -64,12 +64,12 @@ Kody dla znajomych i blogerów będą obsługiwane przez oficjalne sklepy; konfi
 
 Właściciel wznowił i uzupełnił Apple Business 16 października; nie składać ponownie formularzy podatkowych. Kontakt Apple App Review uzupełniono i zapisano 26 października po zgodzie właściciela. Dalszą próbę instalacji Androida właściciel wykona później na nowszym telefonie. Przyczyna zgłoszonego „Item not found” pozostaje niepotwierdzona; na koncie właściciela karta bety otwiera się poprawnie.
 
-1. **Weryfikacje kont:** Apple Paid Apps Agreement, rachunek, podatki i DAC7 są aktywne. Pozostaje DSA **In Review** oraz Google rachunek do wypłat **Verification pending**. Nie powtarzaj złożonych wniosków; wykonaj dalsze kroki wskazane przez sklepy.
+1. **Weryfikacje kont:** Apple Paid Apps Agreement, rachunek, podatki i DAC7 są aktywne. Pozostaje ponowna kontrola Apple DSA (ostatnio **In Review**, 26 października). Właściciel 27 października potwierdził, że rachunek Google jest już zweryfikowany. Nie powtarzaj złożonych wniosków; wykonaj dalsze kroki wskazane przez sklepy.
 2. **Kontakt Apple App Review zakończony:** zapisano go w Apple oraz GitHub Secrets. Nie umieszczaj prywatnego pliku w publicznym repo.
 3. **Zainstaluj najnowszą betę:** Android przez powyższy link, iPhone/iPad przez TestFlight. Zaloguj się tym samym kontem danego sklepu, na którym działał zakup testowy. Najpierw aktualizacja istniejącej instalacji, żeby sprawdzić zachowanie dostępu i postępów.
 4. **Przejdź listę testów poniżej** osobno na Androidzie i iOS. Samą konfigurację bezpłatnych płatności uznajemy za potwierdzoną przez właściciela.
 5. **Zrzut dla oceny zakupu Apple zakończony:** właściciel dostarczył ekran oferty z TestFlight 26 października. Został wgrany i zapisany przy produkcie `full_version`, w sekcji Review Information. Nie trzeba wykonywać kolejnego zrzutu.
-6. Obejrzyj zaktualizowane opisy i zrzuty sklepowe. Zachowaj prywatną kopię katalogu `secrets/` i haseł. Google oczekuje teraz zakończenia weryfikacji dodanej metody wypłat.
+6. Obejrzyj zaktualizowane opisy i zrzuty sklepowe. Zachowaj prywatną kopię katalogu `secrets/` i haseł. Weryfikację rachunku Google właściciel potwierdził 27 października.
 
 ## Co teraz sprawdzić na Androidzie i iOS
 
