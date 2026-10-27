@@ -11,6 +11,12 @@ Ta instrukcja jest dla właściciela aplikacji. Kod, ikony, opisy, zrzuty i auto
 
 **Raport postępów:** [Actions → Release readiness](https://github.com/maciejsaw/nauka-pisania-literek/actions/workflows/readiness.yml) → Run workflow → branch `main`. Wybierz `bootstrap` przed pierwszymi paczkami, `beta` przed testową wysyłką albo `production` przed wydaniem. Raport pokazuje wszystkie braki naraz i numer właściwego kroku poniżej. Czerwony wynik na początku jest oczekiwany: oznacza nieuzupełnione ustawienia. Po każdej części konfiguracji możesz uruchomić go ponownie. Nie łączy się ze sklepami i niczego nie publikuje.
 
+## Wydanie tylko jednej platformy
+
+W Actions → **Release to stores** wybierz **Run workflow** na gałęzi `main`, podaj `release_tag` (np. `v1.0.0`), ustaw `platform` na `android` albo `ios` i zaznacz `publish`, aby wysłać paczkę do sklepu. Bez zaznaczenia `publish` powstaną tylko podpisane paczki. Domyślną platformą jest `both`. Push taga nadal buduje i wysyła obie platformy.
+
+Wydanie ręczne korzysta z dokładnego commita wybranego przebiegu, ale nie tworzy taga Git. Zapisz numer przebiegu, commit i numer builda w notatkach. Po wydaniu Androida 1.0.0 osobno, późniejsze pierwsze wydanie Apple 1.0.0 uruchom z `platform=ios`; nie wysyłaj ponownie tego samego numeru builda Androida przez tag obydwu platform. Kolejna aktualizacja Androida musi mieć wyższą wersję, np. `v1.0.1`.
+
 ## 1. Sprawdź swoje istniejące konta
 
 - [Apple Developer](https://developer.apple.com/account/) i [App Store Connect](https://appstoreconnect.apple.com/): członkostwo musi być aktywne. W Business/Agreements uzupełnij umowę dla płatnych aplikacji/zakupów, rachunek bankowy i dane podatkowe.

@@ -5,9 +5,18 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Wersja paczek startowych, np. v1.0.0-beta.1 (bez publikacji)'
+        description: 'Wersja, np. v1.0.0-beta.1 lub v1.0.0'
         required: true
         default: v1.0.0-beta.1
+      platform:
+        description: 'Platforma do przygotowania lub wysłania'
+        type: choice
+        options: [both, android, ios]
+        default: both
+      publish:
+        description: 'Wyślij do sklepu (produkcja trafia do oceny i publikacji)'
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
@@ -32,6 +41,11 @@ jobs:
         with: { fetch-depth: 0 }
       - name: Require a commit from main
         run: git merge-base --is-ancestor HEAD origin/main
+      - name: Require main for manual publishing
+        if: github.event_name == 'workflow_dispatch' && inputs.publish
+        env:
+          SELECTED_REF: ${{ github.ref }}
+        run: test "$SELECTED_REF" = refs/heads/main
       - uses: actions/setup-node@v4
         with: { node-version: '22', cache: npm }
       - run: npm ci
@@ -54,7 +68,7 @@ jobs:
           ASC_KEY_P8_BASE64: ${{ secrets.ASC_KEY_P8_BASE64 }}
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
           REVIEW_CONTACT_JSON: ${{ secrets.REVIEW_CONTACT_JSON }}
-          PUBLISH: ${{ github.event_name == 'push' }}
+          PUBLISH: ${{ github.event_name == 'push' || inputs.publish }}
         run: |
           if [ "$PUBLISH" = true ]; then
             npm run doctor -- --publish
@@ -67,6 +81,7 @@ jobs:
         run: bash scripts/ci-browser-deps.sh
       - run: npm run test:ui
   android:
+    if: github.event_name == 'push' || inputs.platform != 'ios'
     needs: validate
     runs-on: ubuntu-latest
     env:
@@ -105,6 +120,7 @@ jobs:
       - if: always()
         run: rm -f "$RUNNER_TEMP/upload.jks"
   ios:
+    if: github.event_name == 'push' || inputs.platform != 'android'
     needs: validate
     runs-on: macos-26
     env:
@@ -144,7 +160,11 @@ jobs:
           security delete-keychain pajaczek-ci || true
           rm -f "$RUNNER_TEMP/distribution.p12" "$RUNNER_TEMP/app.mobileprovision"
   publish-android:
-    if: github.event_name == 'push'
+    if: >-
+      always() && !cancelled() &&
+      (github.event_name == 'push' || inputs.publish) &&
+      needs.validate.result == 'success' && needs.android.result == 'success' &&
+      (needs.ios.result == 'success' || needs.ios.result == 'skipped')
     needs: [validate, android, ios]
     runs-on: ubuntu-latest
     env:
@@ -169,7 +189,11 @@ jobs:
       - if: always()
         run: rm -f "$RUNNER_TEMP/play-account.json"
   publish-ios:
-    if: github.event_name == 'push'
+    if: >-
+      always() && !cancelled() &&
+      (github.event_name == 'push' || inputs.publish) &&
+      needs.validate.result == 'success' && needs.ios.result == 'success' &&
+      (needs.android.result == 'success' || needs.android.result == 'skipped')
     needs: [validate, android, ios]
     runs-on: macos-26
     env:
@@ -203,5 +227,5 @@ jobs:
           with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
             f.write('# Pajączek — wynik wydania\n\n')
             for name,item in json.loads(os.environ['RESULTS']).items():f.write(f"- {name}: {item['result']}\n")
-            f.write('\nWysłanie do sklepu nie oznacza zatwierdzenia. Status oceny sprawdź w App Store Connect i Play Console. Tryb ręczny tylko przygotowuje paczki do pierwszej konfiguracji.\n')
+            f.write('\nWysłanie do sklepu nie oznacza zatwierdzenia. Status oceny sprawdź w App Store Connect i Play Console. Tryb ręczny wysyła tylko po zaznaczeniu publish; domyślnie przygotowuje paczki bez wysyłki.\n')
           PY

@@ -2,6 +2,10 @@
 
 Status przygotowań zaktualizowany 27 października 2026; starsze kontrole kont mają daty poniżej. To zapis wykonanych czynności, nie potwierdzenie gotowości do publicznej sprzedaży. Przy wznowieniu sprawdź stan paneli i nie generuj ponownie istniejących kluczy.
 
+## Pierwsze wydanie Androida 27 października 2026
+
+Właściciel zatwierdził **wydanie Androida** („OK wydaj” po pytaniu o Androida). Zgoda nie obejmuje zgłoszenia Apple. Raport gotowości `40517494431` zakończył się **success**. Dodano do istniejącego procesu ręczny wybór platformy oraz opcję `publish` (domyślnie false); sprawdzono YAML i 54 kombinacje wyboru platformy, błędów, anulowania oraz dotychczasowego wydania przez tag. Planowane wydanie: Android **1.0.0 / 1000099**, produkcja, tylko Polska. Ręczny przebieg nie tworzy taga Git; późniejsze Apple 1.0.0 należy uruchomić osobno z `platform=ios`.
+
 ## Kontrola gotowości 27 października 2026
 
 - Właściciel potwierdził ogólnie działanie prób z punktu 1 ostatniej listy: odblokowanie po ponownym uruchomieniu i offline, przywrócenie oraz anulowanie zakupu. Jego sformułowanie: „Punkt 1 wydaje się działać okej”. W połączeniu z wcześniejszym potwierdzeniem zakupów na obu platformach zamknięto `sandboxPurchasesVerified`. Nie jest to nowy test urządzeń wykonany przez asystenta ani szczegółowy raport każdego scenariusza.
