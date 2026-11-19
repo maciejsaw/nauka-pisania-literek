@@ -51,7 +51,8 @@ calls = probe.run(:ios, 'production')
 check(calls.map(&:first) == [:app_store_connect_api_key, :upload_to_app_store], 'iOS production must use App Store upload')
 options = calls.last[1]
 check(options[:submit_for_review] && options[:automatic_release], 'production must request review and release after acceptance')
-check(options[:build_number] == '102.3.99' && options[:app_version] == '1.2.3', 'Apple must use the dotted iOS build, not Android versionCode')
+check(options[:app_version] == '1.2.3', 'Apple must use the release app version')
+check(!options.key?(:build_number), 'IPA upload must infer its build number; Fastlane rejects ipa combined with build_number')
 check(options[:app_review_information][:email_address] == 'review@example.com', 'review contact mapping')
 check(options[:ipa].end_with?('/build/ios/Pajaczek.ipa'), 'publish must use the packaged IPA')
 
